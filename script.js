@@ -206,18 +206,18 @@ window.addEventListener('DOMContentLoaded', () => {
             typeHouse: 'Эркерия',
             code: '000000039'
         },
-        {
-            img: './assets/img/Видовой_кадр_01_10x10.jpg',
-            alt: 'firstTile',
-            size: 'Размер: 10x10',
-            square: 'Площадь: 73 м2',
-            coust:  'Стоимость: <span></span> руб',
-            mortgage: 'В ипотеку: от 12 698 руб',
-            type: 'cottage',
-            link: '10x10.html',
-            typeHouse: 'Галант',
-            code: '000000040'
-        },
+        // {
+        //     img: './assets/img/Видовой_кадр_01_10x10.jpg',
+        //     alt: 'firstTile',
+        //     size: 'Размер: 10x10',
+        //     square: 'Площадь: 73 м2',
+        //     coust:  'Стоимость: <span></span> руб',
+        //     mortgage: 'В ипотеку: от 12 698 руб',
+        //     type: 'cottage',
+        //     link: '10x10.html',
+        //     typeHouse: 'Галант',
+        //     code: '000000040'
+        // },
         {
             img: './assets/img/Видовой_кадр_01_8x10.jpg',
             alt: 'firstTile',
@@ -302,7 +302,6 @@ window.addEventListener('DOMContentLoaded', () => {
             typeHouse: 'Классик',
             code: '000000043'
         },
-        
         {
             img: './assets/img/Видовой_кадр_01_8x8.jpg',
             alt: 'firstTile',
@@ -396,7 +395,7 @@ window.addEventListener('DOMContentLoaded', () => {
             type: 'bathhouse',
             link: '5x6-bath.html',
             typeHouse: 'Бани',
-            code: '000000004'
+            code: ''
         } ,
         {
             img: './assets/img/Видовой_кадр_01_8x7_bathhouse.jpg',
@@ -407,7 +406,7 @@ window.addEventListener('DOMContentLoaded', () => {
             type: 'bathhouse',
             link: '8x7-bath.html',
             typeHouse: 'Бани',
-            code: '000000004'
+            code: ''
         } 
     ]
 
@@ -575,6 +574,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 } 
             )
             .join('')
+        updateCost()
     }
 
     createAllElem(allCatalog)
@@ -679,7 +679,10 @@ window.addEventListener('DOMContentLoaded', () => {
                         }
                     }
                 }
-            ).join('')    
+            ).join('')   
+            
+        updateCost()
+            
     })
 
 
@@ -940,10 +943,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
         data['Дома'].forEach(house => {
             code = house['ДомКод']
-            console.log(code)
             
             codeElement = document.getElementById(`${code}`)
-            console.log(codeElement)
             if (!codeElement) {
                 return
             }
@@ -954,7 +955,6 @@ window.addEventListener('DOMContentLoaded', () => {
             house['Разделы'].forEach(subsection => {
                 if (subsection['Раздел'] == 'Строительство дома в базовой комплектации'){
                     cost += subsection['Подразделы'][0]['Стоимость']
-                    console.log(cost)
                 }
 
                 if (subsection['Раздел'] == 'Отделка фасада'){
@@ -971,5 +971,4 @@ window.addEventListener('DOMContentLoaded', () => {
         })
     }
 
-    updateCost()
 })
