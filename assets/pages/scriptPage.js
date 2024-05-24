@@ -11,15 +11,12 @@ const choiceobj = {
         '000000144': ['000000102', '000000101'],
         '000000108': ['000000107'],
         '000000107': ['000000108'],
-        // 'Отделка стен санузла ПВХ панелями (из коллеции ЛХ)': ['Отделка стен санузла кварцвинилом (из коллеции ЛХ)'],
-        // 'Отделка стен санузла кварцвинилом (из коллеции ЛХ)': ['Отделка стен санузла ПВХ панелями (из коллеции ЛХ)'],
         '000000114': ['000000138'],
         '000000138': ['000000114', '000000132', '000000131', '000000122'],
         '000000120': ['000000121'],
         '000000121': ['000000120'],
         '000000131': ['000000130', '000000138'],
-        '000000132': ['000000130', 'Устройство жидкостного тёплого пола на первый этаж'],
-        '000000130': ['Вононагреватель 150л с автоматом и кабелем к нему'],
+        '000000132': ['000000130', '000000138'],
         '000000130': ['000000131'],
         '000000133': ['000000134', '000000135'],
         '000000134': ['000000133', '000000135'],
@@ -473,9 +470,10 @@ buttonWrappers.addEventListener('click', (e) => {
                 }
 
                 if (choiceElsId && choice == 'mutually exclusive') {
+                    console.log(choiceElsId)
                     choiceElsId.forEach(elId => {
                         const el = document.getElementById(`${elId}`)
-                        
+                        console.log(el)
                         let elChildren = ''
                         if(!el) {
                             return
@@ -527,25 +525,44 @@ buttonWrappers.addEventListener('click', (e) => {
                             const choiceEls = choiceobj['mutually exclusive'][id]
                             choiceEls.forEach(choiceElId => {
                                 if (choiceobj['cant be removed without'][elId]){
-                                    const element = document.getElementById(`${elId}`).children[0]
-                                    const indexEl = listAdditionalServices.indexOf(elId)
+                                    console.log(1)
+                                    console.log(choiceElId)
+                                    const element = document.getElementById(`${choiceElId}`)
+                                    
+                                    elementChildren = ''
+                                    if(!element){
+                                        return
+                                    } else {
+                                        elementChildren = element.children[0]
+                                    }
+                                    
+                                    console.log(elementChildren)
+                                    const indexEl = listAdditionalServices.indexOf(choiceElId)
 
 
                                     if (indexEl !== -1) {
                                         listAdditionalServices.splice(indexEl, 1)
-                                        priceChange -= +element.getAttribute('value')
-                                        element.classList.add('inactiveBtn')
-                                        element.classList.remove('activeBtn')
+                                        priceChange -= +elementChildren.getAttribute('value')
+                                        elementChildren.classList.add('inactiveBtn')
+                                        elementChildren.classList.remove('activeBtn')
                                     }
                                 }
-                                const choiceEl = document.getElementById(`${choiceElId}`).children[0]
-                                const index = listAdditionalServices.indexOf(choiceElId)
+
+                                const choiceEl = document.getElementById(`${choiceElId}`)
+
+                                choiceElChildren = ''
+                                if (!choiceEl){
+                                    return
+                                } else {
+                                    choiceElChildren = choiceEl.children[0]
+                                }
+                                const index = listAdditionalServices.indexOf(choiceElChildren)
                                 
                                 if (index !== -1) {
                                     listAdditionalServices.splice(index, 1)
-                                    priceChange -= +choiceEl.getAttribute('value')
-                                    choiceEl.classList.add('inactiveBtn')
-                                    choiceEl.classList.remove('activeBtn')
+                                    priceChange -= +choiceElChildren.getAttribute('value')
+                                    choiceElChildren.classList.add('inactiveBtn')
+                                    choiceElChildren.classList.remove('activeBtn')
                                 }
                                 
                             })
@@ -790,14 +807,21 @@ buttonWrappers.addEventListener('click', (e) => {
                                         element.classList.remove('activeBtn')
                                     }
                                 }
-                                const choiceEl = document.getElementById(`${choiceElId}`).children[0]
-                                const index = listAdditionalServices.indexOf(choiceElId)
+                                const choiceEl = document.getElementById(`${choiceElId}`)
+
+                                choiceElChildren = ''
+                                if (!choiceEl){
+                                    return
+                                } else {
+                                    choiceElChildren = choiceEl.children[0]
+                                }
+                                const index = listAdditionalServices.indexOf(choiceElChildren)
                                 
                                 if (index !== -1) {
                                     listAdditionalServices.splice(index, 1)
-                                    priceChange -= +choiceEl.getAttribute('value')
-                                    choiceEl.classList.add('inactiveBtn')
-                                    choiceEl.classList.remove('activeBtn')
+                                    priceChange -= +choiceElChildren.getAttribute('value')
+                                    choiceElChildren.classList.add('inactiveBtn')
+                                    choiceElChildren.classList.remove('activeBtn')
                                 }
                                 
                             })
