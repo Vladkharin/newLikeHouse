@@ -339,6 +339,18 @@ window.addEventListener('DOMContentLoaded', () => {
             code: '000000045'
         },
         {
+            img: './assets/img/Видовой_кадр_01_9.5x13.jpg',
+            alt: 'firstTile',
+            size: 'Размер: 9.5x13',
+            square: 'Площадь: 108 м2',
+            coust:  'Стоимость: <span></span> руб',
+            mortgage: 'В ипотеку: от 12 698 руб',
+            type: 'cottage',
+            link: '9.5x13.html',
+            typeHouse: 'Архитект',
+            code: '000000044'
+        },
+        {
             img: './assets/img/Видовой_кадр_01_8.5x12.jpg',
             alt: 'firstTile',
             size: 'Размер: 8.5x12',
