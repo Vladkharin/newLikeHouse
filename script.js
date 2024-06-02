@@ -92,7 +92,7 @@ window.addEventListener('DOMContentLoaded', () => {
             size: 'Размер: 6x6',
             square: 'Площадь: 71 м2',
             coust:  'Стоимость: <span></span> руб',
-            mortgage: 'В ипотеку: от 12 698 руб',
+            mortgage: 'В ипотеку: от <span></span> руб',
             type: 'two-storey house', 
             link: '6x6.html',
             typeHouse: 'Мансардия',
@@ -104,7 +104,7 @@ window.addEventListener('DOMContentLoaded', () => {
             size: 'Размер: 7x7',
             square: 'Площадь: 82 м2',
             coust:  'Стоимость: <span></span> руб',
-            mortgage: 'В ипотеку: от 12 698 руб',
+            mortgage: 'В ипотеку: от <span></span> руб',
             type: 'two-storey house', 
             link: '7x7.html',
             typeHouse: 'Клевер',
@@ -116,7 +116,7 @@ window.addEventListener('DOMContentLoaded', () => {
             size: 'Размер: 7x7 с котельной',
             square: 'Площадь: 82 м2',
             coust:  'Стоимость: <span></span> руб',
-            mortgage: 'В ипотеку: от 12 698 руб',
+            mortgage: 'В ипотеку: от <span></span> руб',
             type: 'two-storey house', 
             link: '7x7_with_boiler_room.html',
             typeHouse: 'Клевер',
@@ -128,7 +128,7 @@ window.addEventListener('DOMContentLoaded', () => {
             size: 'Размер: 6x7',
             square: 'Площадь: 71 м2',
             coust:  'Стоимость: <span></span> руб',
-            mortgage: 'В ипотеку: от 12 698 руб',
+            mortgage: 'В ипотеку: от <span></span> руб',
             type: 'two-storey house', 
             link: '6x7.html',
             typeHouse: 'Мансардия',
@@ -140,7 +140,7 @@ window.addEventListener('DOMContentLoaded', () => {
             size: 'Размер: 8x11',
             square: 'Площадь: 124 м2',
             coust:  'Стоимость: <span></span> руб',
-            mortgage: 'В ипотеку: от 12 698 руб',
+            mortgage: 'В ипотеку: от <span></span> руб',
             type: 'two-storey house', 
             link: '8x11.html',
             typeHouse: 'Шварц',
@@ -152,7 +152,7 @@ window.addEventListener('DOMContentLoaded', () => {
             size: 'Размер: 8x11.8',
             square: 'Площадь: 128 м2',
             coust:  'Стоимость: <span></span> руб',
-            mortgage: 'В ипотеку: от 12 698 руб',
+            mortgage: 'В ипотеку: от <span></span> руб',
             type: 'two-storey house', 
             link: '8x11.8.html',
             typeHouse: 'Шварц',
@@ -164,7 +164,7 @@ window.addEventListener('DOMContentLoaded', () => {
             size: 'Размер: 7.5x10',
             square: 'Площадь: 114 м2',
             coust:  'Стоимость: <span></span> руб',
-            mortgage: 'В ипотеку: от 12 698 руб',
+            mortgage: 'В ипотеку: от <span></span> руб',
             type: 'two-storey house',
             link: '7.5x10.html',
             typeHouse: 'Эркерия',
@@ -176,7 +176,7 @@ window.addEventListener('DOMContentLoaded', () => {
             size: 'Размер: 8.5x11',
             square: 'Площадь: 130 м2',
             coust:  'Стоимость: <span></span> руб',
-            mortgage: 'В ипотеку: от 12 698 руб',
+            mortgage: 'В ипотеку: от <span></span> руб',
             type: 'two-storey house',
             link: '8.5x11.html',
             typeHouse: 'Эркерия',
@@ -188,7 +188,7 @@ window.addEventListener('DOMContentLoaded', () => {
             size: 'Размер: 9.5x10',
             square: 'Площадь: 128 м2',
             coust:  'Стоимость: <span></span> руб',
-            mortgage: 'В ипотеку: от 12 698 руб',
+            mortgage: 'В ипотеку: от <span></span> руб',
             type: 'two-storey house',
             link: '9.5x10.html',
             typeHouse: 'Эркерия',
@@ -200,7 +200,7 @@ window.addEventListener('DOMContentLoaded', () => {
             size: 'Размер: 9.5x12',
             square: 'Площадь: 163 м2',
             coust:  'Стоимость: <span></span> руб',
-            mortgage: 'В ипотеку: от 12 698 руб',
+            mortgage: 'В ипотеку: от <span></span> руб',
             type: 'two-storey house',
             link: '9.5x12.html',
             typeHouse: 'Эркерия',
@@ -211,8 +211,8 @@ window.addEventListener('DOMContentLoaded', () => {
             alt: 'firstTile',
             size: 'Размер: 10x10',
             square: 'Площадь: 73 м2',
-            coust:  'Стоимость: <span></span> руб',
-            mortgage: 'В ипотеку: от 12 698 руб',
+            coust:  'Стоимость: Скоро будут доступны',
+            mortgage: 'Стоимость: Скоро будут доступны',
             type: 'cottage',
             link: '10x10.html',
             typeHouse: 'Галант',
@@ -224,7 +224,7 @@ window.addEventListener('DOMContentLoaded', () => {
             size: 'Размер: 8x10',
             square: 'Площадь: 73 м2',
             coust:  'Стоимость: <span></span> руб',
-            mortgage: 'В ипотеку: от 12 698 руб',
+            mortgage: 'В ипотеку: от <span></span> руб',
             type: 'cottage',
             link: '8x10.html',
             typeHouse: 'Кантри',
@@ -236,7 +236,7 @@ window.addEventListener('DOMContentLoaded', () => {
             size: 'Размер: 8х10( 2 спальни)',
             square: 'Площадь: 73 м2',
             coust:  'Стоимость: <span></span> руб',
-            mortgage: 'В ипотеку: от 12 698 руб',
+            mortgage: 'В ипотеку: от <span></span> руб',
             type: 'cottage',
             link: '8х10_2_bedrooms.html',
             typeHouse: 'Кантри',
@@ -248,7 +248,7 @@ window.addEventListener('DOMContentLoaded', () => {
             size: 'Размер: 8х12',
             square: 'Площадь: 87 м2',
             coust:  'Стоимость: <span></span> руб',
-            mortgage: 'В ипотеку: от 12 698 руб',
+            mortgage: 'В ипотеку: от <span></span> руб',
             type: 'cottage',
             link: '8x12_country.html',
             typeHouse: 'Кантри',
@@ -260,7 +260,7 @@ window.addEventListener('DOMContentLoaded', () => {
             size: 'Размер: 8х13',
             square: 'Площадь: 87 м2',
             coust:  'Стоимость: <span></span> руб',
-            mortgage: 'В ипотеку: от 12 698 руб',
+            mortgage: 'В ипотеку: от <span></span> руб',
             type: 'cottage',
             link: '8x13_country.html',
             typeHouse: 'Кантри',
@@ -272,7 +272,7 @@ window.addEventListener('DOMContentLoaded', () => {
             size: 'Размер: 8х13',
             square: 'Площадь: 87 м2',
             coust:  'Стоимость: <span></span> руб',
-            mortgage: 'В ипотеку: от 12 698 руб',
+            mortgage: 'В ипотеку: от <span></span> руб',
             type: 'cottage',
             link: '8x13_country_2.html',
             typeHouse: 'Кантри',
@@ -284,7 +284,7 @@ window.addEventListener('DOMContentLoaded', () => {
             size: 'Размер: 7x8',
             square: 'Площадь: 94.7 м2',
             coust:  'Стоимость: <span></span> руб',
-            mortgage: 'В ипотеку: от 12 698 руб',
+            mortgage: 'В ипотеку: от <span></span> руб',
             type: 'two-storey house',
             link: '7x8.html',
             typeHouse: 'Классик',
@@ -296,7 +296,7 @@ window.addEventListener('DOMContentLoaded', () => {
             size: 'Размер: 7x10',
             square: 'Площадь: 119 м2',
             coust:  'Стоимость: <span></span> руб',
-            mortgage: 'В ипотеку: от 12 698 руб',
+            mortgage: 'В ипотеку: от <span></span> руб',
             type: 'two-storey house',
             link: '7x10.html',
             typeHouse: 'Классик',
@@ -308,7 +308,7 @@ window.addEventListener('DOMContentLoaded', () => {
             size: 'Размер: 8x8',
             square: 'Площадь: 109 м2',
             coust:  'Стоимость: <span></span> руб',
-            mortgage: 'В ипотеку: от 12 698 руб',
+            mortgage: 'В ипотеку: от <span></span> руб',
             type: 'two-storey house',
             link: '8x8.html',
             typeHouse: 'Классик',
@@ -320,7 +320,7 @@ window.addEventListener('DOMContentLoaded', () => {
             size: 'Размер: 8x9',
             square: 'Площадь: 126 м2',
             coust:  'Стоимость: <span></span> руб',
-            mortgage: 'В ипотеку: от 12 698 руб',
+            mortgage: 'В ипотеку: от <span></span> руб',
             type: 'two-storey house',
             link: '8x9.html',
             typeHouse: 'Классик',
@@ -332,7 +332,7 @@ window.addEventListener('DOMContentLoaded', () => {
             size: 'Размер: 9.5x14',
             square: 'Площадь: 108 м2',
             coust:  'Стоимость: <span></span> руб',
-            mortgage: 'В ипотеку: от 12 698 руб',
+            mortgage: 'В ипотеку: от <span></span> руб',
             type: 'cottage',
             link: '9.5x14.html',
             typeHouse: 'Архитект',
@@ -344,7 +344,7 @@ window.addEventListener('DOMContentLoaded', () => {
             size: 'Размер: 9.5x13',
             square: 'Площадь: 108 м2',
             coust:  'Стоимость: <span></span> руб',
-            mortgage: 'В ипотеку: от 12 698 руб',
+            mortgage: 'В ипотеку: от <span></span> руб',
             type: 'cottage',
             link: '9.5x13.html',
             typeHouse: 'Архитект',
@@ -356,7 +356,7 @@ window.addEventListener('DOMContentLoaded', () => {
             size: 'Размер: 8.5x12',
             square: 'Площадь: 108 м2',
             coust:  'Стоимость: <span></span> руб',
-            mortgage: 'В ипотеку: от 12 698 руб',
+            mortgage: 'В ипотеку: от <span></span> руб',
             type: 'cottage',
             link: '8.5x12.html',
             typeHouse: 'Архитект',
@@ -368,7 +368,7 @@ window.addEventListener('DOMContentLoaded', () => {
             size: 'Размер: 7x8',
             square: 'Площадь: 50 м2',
             coust:  'Стоимость: <span></span> руб',
-            mortgage: 'В ипотеку: от 12 698 руб',
+            mortgage: 'В ипотеку: от <span></span> руб',
             type: 'cottage',
             link: '7x8_cottage.html',
             typeHouse: 'Микра',
@@ -380,7 +380,7 @@ window.addEventListener('DOMContentLoaded', () => {
             size: 'Размер: 5x7',
             square: 'Площадь: 50 м2',
             coust:  'Стоимость: <span></span> руб',
-            mortgage: 'В ипотеку: от 12 698 руб',
+            mortgage: 'В ипотеку: от <span></span> руб',
             type: 'cottage',
             link: '5x7.html',
             typeHouse: 'Микра',
@@ -392,7 +392,7 @@ window.addEventListener('DOMContentLoaded', () => {
             size: 'Размер: 7x7',
             square: 'Площадь: 71 м2',
             coust:  'Стоимость: <span></span> руб',
-            mortgage: 'В ипотеку: от 12 698 руб',
+            mortgage: 'В ипотеку: от <span></span> руб',
             type: 'two-storey house', 
             link: '7x7_attic.html',
             typeHouse: 'Мансардия',
@@ -403,7 +403,7 @@ window.addEventListener('DOMContentLoaded', () => {
             alt: 'twentyFourthTile',
             size: 'Размер: 5х6',
             square: 'Площадь: 26 м2',
-            coust:  'Стоимость: <span></span> руб',
+            coust:  'Стоимость: Скоро будут доступны',
             type: 'bathhouse',
             link: '5x6-bath.html',
             typeHouse: 'Бани',
@@ -414,7 +414,7 @@ window.addEventListener('DOMContentLoaded', () => {
             alt: 'twentyFifthTile',
             size: 'Размер: 8х7',
             square: 'Площадь: 33 м2',
-            coust:  'Стоимость: <span></span> руб',
+            coust:  'Стоимость: Скоро будут доступны',
             type: 'bathhouse',
             link: '8x7-bath.html',
             typeHouse: 'Бани',
@@ -962,6 +962,8 @@ window.addEventListener('DOMContentLoaded', () => {
             }
             
             let children = codeElement.children[0]
+            let nextSib = codeElement.nextElementSibling.children[0]
+            console.log(nextSib)
             cost = 0
 
             house['Разделы'].forEach(subsection => {
@@ -975,11 +977,18 @@ window.addEventListener('DOMContentLoaded', () => {
                             cost += item['Стоимость']
                         }
                     })
+                } else if (subsection['Раздел'] == 'Внутренняя отделка и комфорт') {
+                    subsection['Подразделы'].forEach(item => {
+                        if (item['Подраздел'] == 'Стены и потолки: имитация бруса') {
+                            cost += item['Стоимость']
+                        }
+                    })
                 }
             })
 
 
             children.textContent = cost
+            nextSib.textContent = cost/5
         })
     }
 

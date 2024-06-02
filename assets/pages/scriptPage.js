@@ -6,9 +6,10 @@ let startCost = 0;
 const choiceobj = {
     'mutually exclusive':{
         '000000102': ['000000101', '000000105', '000000144'],
-        '000000101': ['000000102', '000000144'],
-        '000000105': ['000000102'],
-        '000000144': ['000000102', '000000101'],
+        '000000101': ['000000102'],
+        '000000105': ['000000102', '000000144'],
+        '000000144': ['000000102', '000000105'],
+        '000000106': ['000000132'],
         '000000108': ['000000107'],
         '000000107': ['000000108'],
         '000000114': ['000000138'],
@@ -16,7 +17,7 @@ const choiceobj = {
         '000000120': ['000000121'],
         '000000121': ['000000120'],
         '000000131': ['000000130', '000000138'],
-        '000000132': ['000000130', '000000138'],
+        '000000132': ['000000130', '000000138', '000000106'],
         '000000130': ['000000131'],
         '000000133': ['000000134', '000000135'],
         '000000134': ['000000133', '000000135'],
@@ -132,6 +133,12 @@ async function createAdditionalServices(func) {
                 mainCost.textContent = startCost
                 activeClass = 'activeBtn'
                 listAdditionalServices.push('Имитация бруса')
+            } else if (item['Код'] == '000000132') {
+                startCost += item['Стоимость']
+                cost.textContent = startCost
+                mainCost.textContent = startCost
+                activeClass = 'activeBtn'
+                listAdditionalServices.push('Стены и потолки: имитация бруса')
             }
             return `
                 <div class="secondBlock__service">
@@ -687,7 +694,7 @@ buttonWrappers.addEventListener('click', (e) => {
                     const indexEl = listAdditionalServices.indexOf(id)
                     listAdditionalServices.splice(indexEl, 1)
                 } else {
-                    if (id === '000000102' || id === '000000101') {
+                    if (id === '000000102' || id === '000000101' || id === '000000105') {
                         const facadeImitation = document.getElementById('000000144').querySelector('button')
 
                         if (facadeImitation.classList.contains('inactiveBtn')) {
@@ -696,11 +703,21 @@ buttonWrappers.addEventListener('click', (e) => {
                             facadeImitation.classList.remove('inactiveBtn')
                             priceChange += +facadeImitation.getAttribute('value')
                         }
-                    }
+                    } else if (id === '000000106') {
+                        const facadeImitation = document.getElementById('000000132').querySelector('button')
 
-                    if (id === 'Имитация бруса'){
+                        if (facadeImitation.classList.contains('inactiveBtn')) {
+                            listAdditionalServices.push('Стены и потолки: имитация бруса')
+                            facadeImitation.classList.add('activeBtn')
+                            facadeImitation.classList.remove('inactiveBtn')
+                            priceChange += +facadeImitation.getAttribute('value')
+                        }
+                    } else if (id === '000000144'){
+                        return
+                    } else if (id === '000000132'){
                         return
                     }
+
 
                     const indexEl = listAdditionalServices.indexOf(id)
                     listAdditionalServices.splice(indexEl, 1)
@@ -946,9 +963,8 @@ buttonWrappers.addEventListener('click', (e) => {
                     const indexEl = listAdditionalServices.indexOf(id)
                     listAdditionalServices.splice(indexEl, 1)
                 } else {
-
-                    if (id === 'Хауберк фасадная плитка') {
-                        const facadeImitation = document.getElementById('Имитация бруса').querySelector('button')
+                    if (id === '000000102' || id === '000000101' || id === '000000105') {
+                        const facadeImitation = document.getElementById('000000144').querySelector('button')
 
                         if (facadeImitation.classList.contains('inactiveBtn')) {
                             listAdditionalServices.push('Имитация бруса')
@@ -956,14 +972,26 @@ buttonWrappers.addEventListener('click', (e) => {
                             facadeImitation.classList.remove('inactiveBtn')
                             priceChange += +facadeImitation.getAttribute('value')
                         }
-                    }
+                    } else if (id === '000000106') {
+                        const facadeImitation = document.getElementById('000000132').querySelector('button')
 
-                    if (id === 'Имитация бруса'){
+                        if (facadeImitation.classList.contains('inactiveBtn')) {
+                            listAdditionalServices.push('Стены и потолки: имитация бруса')
+                            facadeImitation.classList.add('activeBtn')
+                            facadeImitation.classList.remove('inactiveBtn')
+                            priceChange += +facadeImitation.getAttribute('value')
+                        }
+                    } else if (id === '000000144'){
+                        return
+                    } else if (id === '000000132'){
                         return
                     }
 
+
                     const indexEl = listAdditionalServices.indexOf(id)
                     listAdditionalServices.splice(indexEl, 1)
+                    console.log(listAdditionalServices)
+
                 }
 
                 
@@ -973,7 +1001,7 @@ buttonWrappers.addEventListener('click', (e) => {
 
             }
 
-    
+            
             cost.textContent = startCost + priceChange + inputPriceChange
         }
     }
