@@ -739,6 +739,8 @@ buttonWrappers.addEventListener('click', (e) => {
             const btn = target.parentNode.querySelector('button')
             const value = +btn.value
 
+
+            
     
             if (btn.classList.contains('inactiveBtn')) {
                 const id = btn.parentNode.getAttribute('id')
@@ -747,6 +749,17 @@ buttonWrappers.addEventListener('click', (e) => {
 
                 if (id === 'Скважина Пластик' || id === 'Устройство колодца'){
                     return
+                }
+
+                if (id === '000000101'){
+                    const el = document.getElementById('000000144').children[0]
+                    if (el.classList.contains('inactiveBtn')){
+    
+                        priceChange += +el.getAttribute('value')
+                        el.classList.add('activeBtn')
+                        el.classList.remove('inactiveBtn')
+                        listAdditionalServices.push('Имитация бруса')
+                    }
                 }
                 listAdditionalServices.push(id)
 
