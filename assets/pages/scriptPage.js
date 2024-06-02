@@ -33,9 +33,10 @@ const choiceobj = {
     },
     'cant be removed without': {
         '000000130' : ['000000138'],
-        '000000122': ['000000131']
-    }
+        '000000122': ['000000131'],
+        '000000101' : ['000000144'],
 
+    }
 }
 
 let listAdditionalServices = []
@@ -362,7 +363,6 @@ buttonWrappers.addEventListener('input', (e) => {
 
         cost.textContent = startCost + priceChange + inputPriceChange
 
-        console.log(listAdditionalServices)
     } else if (e.target.classList.contains('secondBlock__service-input') && e.target.parentNode.previousElementSibling.getAttribute('id') === 'Устройство колодца') {
 
         let value = e.target.value
@@ -440,7 +440,6 @@ buttonWrappers.addEventListener('input', (e) => {
 
         cost.textContent = startCost + priceChange + inputPriceChange
 
-        console.log(listAdditionalServices)
     }
 })
 // click select button
@@ -462,6 +461,17 @@ buttonWrappers.addEventListener('click', (e) => {
                 if (id === 'Скважина Пластик' || id === 'Устройство колодца'){
                     return
                 }
+
+                if (id === '000000101'){
+                    const el = document.getElementById('000000144').children[0]
+                    if (el.classList.contains('inactiveBtn')){
+
+                        priceChange += +el.getAttribute('value')
+                        el.classList.add('activeBtn')
+                        el.classList.remove('inactiveBtn')
+                        listAdditionalServices.push('Имитация бруса')
+                    }
+                }
     
                 listAdditionalServices.push(id)
 
@@ -479,10 +489,8 @@ buttonWrappers.addEventListener('click', (e) => {
                 }
 
                 if (choiceElsId && choice == 'mutually exclusive') {
-                    console.log(choiceElsId)
                     choiceElsId.forEach(elId => {
                         const el = document.getElementById(`${elId}`)
-                        console.log(el)
                         let elChildren = ''
                         if(!el) {
                             return
@@ -534,20 +542,15 @@ buttonWrappers.addEventListener('click', (e) => {
                             const choiceEls = choiceobj['mutually exclusive'][id]
                             choiceEls.forEach(choiceElId => {
                                 if (choiceobj['cant be removed without'][elId]){
-                                    console.log(1)
-                                    console.log(choiceElId)
                                     const element = document.getElementById(`${choiceElId}`)
-                                    
-                                    elementChildren = ''
+                                    let elementChildren = ''
                                     if(!element){
                                         return
                                     } else {
                                         elementChildren = element.children[0]
                                     }
                                     
-                                    console.log(elementChildren)
                                     const indexEl = listAdditionalServices.indexOf(choiceElId)
-
 
                                     if (indexEl !== -1) {
                                         listAdditionalServices.splice(indexEl, 1)
@@ -559,7 +562,7 @@ buttonWrappers.addEventListener('click', (e) => {
 
                                 const choiceEl = document.getElementById(`${choiceElId}`)
 
-                                choiceElChildren = ''
+                                let choiceElChildren = ''
                                 if (!choiceEl){
                                     return
                                 } else {
@@ -828,7 +831,7 @@ buttonWrappers.addEventListener('click', (e) => {
                                 }
                                 const choiceEl = document.getElementById(`${choiceElId}`)
 
-                                choiceElChildren = ''
+                                let choiceElChildren = ''
                                 if (!choiceEl){
                                     return
                                 } else {
@@ -990,7 +993,6 @@ buttonWrappers.addEventListener('click', (e) => {
 
                     const indexEl = listAdditionalServices.indexOf(id)
                     listAdditionalServices.splice(indexEl, 1)
-                    console.log(listAdditionalServices)
 
                 }
 

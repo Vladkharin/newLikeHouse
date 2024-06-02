@@ -963,7 +963,6 @@ window.addEventListener('DOMContentLoaded', () => {
             
             let children = codeElement.children[0]
             let nextSib = codeElement.nextElementSibling.children[0]
-            console.log(nextSib)
             cost = 0
 
             house['Разделы'].forEach(subsection => {
