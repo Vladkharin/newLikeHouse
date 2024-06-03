@@ -233,7 +233,7 @@ window.addEventListener('DOMContentLoaded', () => {
         {
             img: './assets/img/Видовой_кадр_01_8x10_(2_спальни).jpg',
             alt: 'firstTile',
-            size: 'Размер: 8х10( 2 спальни)',
+            size: 'Размер: 8х10 (2 спальни)',
             square: 'Площадь: 73 м2',
             coust:  'Стоимость: <span></span> руб',
             mortgage: 'В ипотеку: от <span></span> руб',

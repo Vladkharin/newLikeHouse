@@ -2,7 +2,24 @@
 
  ExpiresActive On
 
- ExpiresByType text/css "access plus 1 minutes"
- ExpiresByType text/javascript "access plus 1 minutes"
+ ExpiresByType text/css "access plus 1 seconds"
+ ExpiresByType text/javascript "access plus 1 seconds"
+ ExpiresByType application/javascript "access plus 1 seconds"
+ ExpiresByType application/x-javascript "access plus 1 seconds"
 
 </ifModule>
+
+<ifModule mod_headers.c>
+    <FilesMatch "\.(html|htm)$">
+        Header set Cache-Control "max-age=43200"
+    </FilesMatch>
+    <FilesMatch "\.(flv|swf|ico|gif|jpg|jpeg|png)$">
+        Header set Cache-Control "max-age=2592000"
+    </FilesMatch>
+    <FilesMatch "\.(js|css)$">
+        Header set Cache-Control "max-age=1"
+    </FilesMatch>
+    <FilesMatch "\.(pl|php|cgi|spl|scgi|fcgi|js|css)$">
+        Header unset Cache-Control
+    </FilesMatch>
+</IfModule>
