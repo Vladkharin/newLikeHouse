@@ -255,7 +255,7 @@ window.addEventListener('DOMContentLoaded', () => {
             code: '000000019'
         },
         {
-            img: './assets/img/Видовой_кадр_01_8x12.jpg',
+            img: './assets/img/Видовой_кадр_01_8x13_country.jpg',
             alt: 'firstTile',
             size: 'Размер: 8х13',
             square: 'Площадь: 87 м2',
@@ -375,7 +375,7 @@ window.addEventListener('DOMContentLoaded', () => {
             code: '000000008'
         },
         {
-            img: './assets/img/Видовой_кадр_01_7x8_cottage.jpg',
+            img: './assets/img/Видовой_кадр_01_5x7.jpg',
             alt: 'firstTile',
             size: 'Размер: 5x7',
             square: 'Площадь: 50 м2',

@@ -240,24 +240,8 @@ nextModal.addEventListener('click', function(){
 const buttonWrappers = document.querySelector('.secondBlock__services');
 const selectionMenu = document.querySelector('.secondBlockMenu__menu')
 
-// buttonWrappers.addEventListener('click', (e) => {
-//     if (e.target.classList.contains('secondBlock__service-button')) {
-//         if(selectionMenu.classList.contains('notVisible')){
-//             selectionMenu.classList.remove('notVisible')
-//             selectionMenu.classList.add('visible')
-//         } else {
-//             selectionMenu.classList.remove('visible')
-//             selectionMenu.classList.add('notVisible')
-//         }
-//     }
-// })
-
 let priceChange = 0;
 let inputPriceChange = 0
-
-
-
-
 
 let firstPrice = 0;
 let firstPositionInput = 0;
@@ -269,10 +253,6 @@ buttonWrappers.addEventListener('input', (e) => {
 
     const firstInput = document.getElementById(`Скважина Пластик`)
     const secondInput = document.getElementById(`Устройство колодца`)
-    const firstInputCounters = document.getElementById(`${COAST_WELL + 'numberCounter'}`)
-    const secondInputCounters = document.getElementById(`${COAST_FOUNTAIN + 'numberCounter'}`)
-    const firstInputProgressBar = document.getElementById(`${COAST_WELL + 'progressBar'}`)
-    const secondInputProgressBar = document.getElementById(`${COAST_FOUNTAIN + 'progressBar'}`)
     const firstActiveButton = document.getElementById('Скважина Пластик').querySelector('button')
     const secondActiveButton = document.getElementById('Устройство колодца').querySelector('button')
 
@@ -464,7 +444,8 @@ buttonWrappers.addEventListener('click', (e) => {
 
                 if (id === '000000101'){
                     const el = document.getElementById('000000144').children[0]
-                    if (el.classList.contains('inactiveBtn')){
+                    const secondEl = document.getElementById('000000105').children[0]
+                    if (el.classList.contains('inactiveBtn') && secondEl.classList.contains('inactiveBtn')){
 
                         priceChange += +el.getAttribute('value')
                         el.classList.add('activeBtn')
@@ -753,8 +734,9 @@ buttonWrappers.addEventListener('click', (e) => {
 
                 if (id === '000000101'){
                     const el = document.getElementById('000000144').children[0]
-                    if (el.classList.contains('inactiveBtn')){
-    
+                    const secondEl = document.getElementById('000000105').children[0]
+                    if (el.classList.contains('inactiveBtn') && secondEl.classList.contains('inactiveBtn')){
+
                         priceChange += +el.getAttribute('value')
                         el.classList.add('activeBtn')
                         el.classList.remove('inactiveBtn')
@@ -1028,8 +1010,18 @@ buttonWrappers.addEventListener('click', (e) => {
 const buttonsSpan = document.querySelectorAll('.secondBlock__service-span')
 const imgBtn = document.querySelector('.firstBlock__carousel-item')
 const modal = document.querySelector(`.modalMain.bgwhite`)
+const imgsField = document.querySelectorAll('.firstBlock__field-img')
 let slideIndexModal = 1;
 
+imgsField.forEach((imgField, index) => {
+    imgField.addEventListener('click', () => {
+        modal.classList.add('visible')
+        modal.classList.remove('notVisible')
+        document.body.style.overflow = 'hidden';
+        slideIndexModal = index + 1
+        showSlidesModal(slideIndexModal)
+    })
+})
 
 imgBtn.addEventListener('click', () => {
     modal.classList.add('visible')
