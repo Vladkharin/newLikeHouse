@@ -180,7 +180,7 @@ export let itemsHouse = [
     code: "000000016",
   },
   {
-    img: "./assets/img/Видовой_кадр_01_8x12.jpg",
+    img: "./assets/img/Видовой_кадр_01_8x13_country2.jpg",
     alt: "firstTile",
     size: "Размер: 8х13",
     square: "Площадь: 87 м2",

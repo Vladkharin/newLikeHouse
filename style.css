@@ -393,6 +393,7 @@ body {
   display: flex;
   flex-direction: column;
   padding-left: 5px;
+  text-decoration: none;
 }
 
 .fourthAndThirdBlockTogether__tile-text {
