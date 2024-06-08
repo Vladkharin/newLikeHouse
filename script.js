@@ -1,6 +1,6 @@
 import { itemsHouse, arrayNameAndNumber, arrayPositionBG } from "./houses.js";
 
-async function fetchAll() {
+async function fetchHouses() {
   const response = await fetch("1c_site.json");
   const data = await response.json();
   return data;
@@ -35,7 +35,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   const buttonModalFeedBack = document.querySelector(".firstBlock__buttonMediaMin940px");
   const feedBackMenu = document.querySelector(".feedBack__menu");
-  const feedBack = document.querySelector(".feedBack");
+  const feedBackWindow = document.querySelector(".feedBack");
   const crestik = document.querySelector(".crestik");
   const formButtonWrapper = document.querySelector(".feedBack__menu-buttons");
   const flag = document.querySelector(".feedBack__menu-flag");
@@ -47,7 +47,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const feedBackModal = document.querySelector(".feedBackModal");
   const btnCLoseBlackCrestik = document.querySelector(".crestikBlack");
 
-  const message = {
+  const FORM_STATUS_MESSAGE = {
     loading: "Загрузка...",
     success: "Спасибо! Скоро мы с вами свяжемся",
     failure: "Что-то пошло не так...",
@@ -56,12 +56,11 @@ window.addEventListener("DOMContentLoaded", () => {
   // phone mask selectors
 
   const formInputMask = document.querySelector(".feedBack__from-inputPhone");
-  const maskOptions = {
+
+  const mask = new IMask(formInputMask, {
     mask: "(000) 000-00-00",
     lazy: true,
-  };
-
-  const mask = new IMask(formInputMask, maskOptions);
+  });
 
   // modal selectors
 
@@ -77,22 +76,19 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // actions on the dropdown menu
 
-  function menuAddorRemoveClass(action) {
-    switch (action) {
-      case "remove":
-        menu.classList.remove("visible");
-        overlay.classList.remove("block");
-        document.body.style.overflow = "";
-        break;
-      case "add":
-        menu.classList.add("visible");
-        overlay.classList.add("block");
-        document.body.style.overflow = "hidden";
-        break;
-    }
+  function hideMenu() {
+    menu.classList.remove("visible");
+    overlay.classList.remove("block");
+    document.body.style.overflow = "";
   }
 
-  function checkingTheTargetInTheMenu(event) {
+  function showMenu() {
+    menu.classList.add("visible");
+    overlay.classList.add("block");
+    document.body.style.overflow = "hidden";
+  }
+
+  function checkTheTargetInTheMenu(event) {
     target = event.target.className;
 
     switch (target) {
@@ -151,7 +147,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // create new array and filtration types and houses
 
-  function findingHouseTypes(houses) {
+  function findHouseTypes(houses) {
     let typesHouseArray = [];
 
     houses.forEach((item) => {
@@ -187,7 +183,7 @@ window.addEventListener("DOMContentLoaded", () => {
   function createEntireCatalogOfHouses(houses) {
     const entireCatalogOfHouses = [];
 
-    findingHouseTypes(houses).forEach((type) => {
+    findHouseTypes(houses).forEach((type) => {
       entireCatalogOfHouses.push(type);
 
       houses.forEach((item) => {
@@ -328,7 +324,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // redraw houses field due to filtering
 
-  function redrawHousesFieldDueToFiltering(event) {
+  function redrawHousesFieldDueToFilter(event) {
     let target = event.target;
 
     changesBgColorInSelectionsButtons(target);
@@ -388,18 +384,15 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // open or close form modal
 
-  function openOrCLoseFormModal(action) {
-    switch (action) {
-      case "open":
-        feedBack.style.display = "flex";
-        document.body.style.overflow = "hidden";
-        break;
-      case "close":
-        form.reset();
-        feedBack.style.display = "none";
-        document.body.style.overflow = "";
-        break;
-    }
+  function showFormModal() {
+    feedBackWindow.style.display = "flex";
+    document.body.style.overflow = "hidden";
+  }
+
+  function hideFormModal() {
+    form.reset();
+    feedBackWindow.style.display = "none";
+    document.body.style.overflow = "";
   }
 
   // create array by using position , name and number
@@ -466,7 +459,7 @@ window.addEventListener("DOMContentLoaded", () => {
     formButtonWrapper.style.display = "none";
   }
 
-  function switchingCountry(event) {
+  function switchCountry(event) {
     let target = event.target;
     let number;
     switch (target.className) {
@@ -488,44 +481,41 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // sending form
 
-  postData(form);
+  async function postData(form, event) {
+    event.preventDefault();
 
-  function postData(form) {
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
+    let error = formValidate();
 
-      let error = formValidate();
+    const indexNumber = document.querySelector(".feedBack__menu-number").textContent;
+    const inputTel = document.querySelector(".feedBack__from-inputPhone").value;
 
-      const indexNumber = document.querySelector(".feedBack__menu-number").textContent;
-      const inputTel = document.querySelector(".feedBack__from-inputPhone").value;
+    btnText.classList.add("block");
+    btnText.classList.remove("none");
+    loader.classList.remove("block");
+    loader.classList.add("none");
 
-      btnText.classList.add("block");
-      btnText.classList.remove("none");
-      loader.classList.remove("block");
-      loader.classList.add("none");
+    if (error === 0) {
+      const formData = new FormData(form);
 
-      if (error === 0) {
-        const request = new XMLHttpRequest();
-        request.open("POST", "sendmail.php");
-        const formData = new FormData(form);
+      const phone = indexNumber + inputTel;
 
-        const phone = indexNumber + inputTel;
+      formData.set("user_phone", phone);
 
-        formData.set("user_phone", phone);
+      const response = await fetch("sendmail.php", {
+        method: "POST",
+        body: formData,
+      });
 
-        request.send(formData);
-
-        request.addEventListener("load", () => {
-          if (request.status === 200) {
-            showThanksModal();
-            form.reset();
-          } else {
-            alert(message.failure);
-          }
-        });
+      if (response.status === 200) {
+        showThanksModal();
+        form.reset();
+      } else {
+        alert(FORM_STATUS_MESSAGE.failure);
       }
-    });
+    }
   }
+
+  form.addEventListener("submit", (event) => postData(form, event));
 
   function formValidate() {
     let error = 0;
@@ -607,7 +597,7 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   async function updateCost() {
-    const data = await fetchAll();
+    const data = await fetchHouses();
 
     data["Дома"].forEach((house) => {
       const code = house["ДомКод"];
@@ -649,17 +639,17 @@ window.addEventListener("DOMContentLoaded", () => {
 
   createFormChoiceCountry();
 
-  menuOpenBytton.addEventListener("click", () => menuAddorRemoveClass("add"));
+  menuOpenBytton.addEventListener("click", () => showMenu());
 
-  menu.addEventListener("click", (event) => checkingTheTargetInTheMenu(event));
+  menu.addEventListener("click", (event) => checkTheTargetInTheMenu(event));
 
-  overlay.addEventListener("click", () => menuAddorRemoveClass("remove"));
+  overlay.addEventListener("click", () => hideMenu());
 
   fifthBlockButtonWrapper.addEventListener("click", (event) => actionOnFifthBLockButton(event));
 
   window.addEventListener("scroll", () => changesBGColorInNav());
 
-  selectionButtonsMenu.addEventListener("click", (event) => redrawHousesFieldDueToFiltering(event));
+  selectionButtonsMenu.addEventListener("click", (event) => redrawHousesFieldDueToFilter(event));
 
   slidesFieldActionOpen.addEventListener("click", (event) => openModal(event));
 
@@ -671,13 +661,13 @@ window.addEventListener("DOMContentLoaded", () => {
 
   slideModalField.addEventListener("click", (event) => zoomModalSlide(event));
 
-  buttonModalFeedBack.addEventListener("click", () => openOrCLoseFormModal("open"));
+  buttonModalFeedBack.addEventListener("click", () => showFormModal());
 
-  crestik.addEventListener("click", () => openOrCLoseFormModal("close"));
+  crestik.addEventListener("click", () => hideFormModal());
 
   feedBackMenu.addEventListener("click", (event) => openOrCloseFeedbackMenu(event));
 
-  formButtonWrapper.addEventListener("click", (event) => switchingCountry(event));
+  formButtonWrapper.addEventListener("click", (event) => switchCountry(event));
 
   btnCLoseBlackCrestik.addEventListener("click", () => hideThanksModal());
 
