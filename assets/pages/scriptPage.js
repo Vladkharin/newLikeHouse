@@ -1,7 +1,51 @@
-const cost = document.querySelector(".cost__span");
+// request to json file
+
+async function fetchHouses() {
+  const response = await fetch("1c_site.json");
+  const data = await response.json();
+  return data;
+}
+
+// price selectors
+const price = document.querySelector(".cost__span");
+const mainPrice = document.querySelector(".firstBlock__button>span");
+
 let COAST_WELL = 0;
 let COAST_FOUNTAIN = 0;
-let startCost = 0;
+let startPrice = 0;
+
+// page selectors
+const servicesParent = document.querySelector(".secondBlock__services");
+const houseId = document.querySelector("#id");
+
+// slider selectors
+
+const slidesModal = document.querySelectorAll(".firstBlock__field-img");
+const prevModal = document.querySelector(".firstBlock__carousel-left");
+const nextModal = document.querySelector(".firstBlock__carousel-right");
+const slideModalField = document.querySelector(".firstBlock__field");
+const mainSlide = document.querySelector(".firstBlock__carousel-item");
+const mediaQuerrymax = window.matchMedia("(max-width: 959px)");
+
+let slideIndex = 1;
+let lastSlideIndex = 0;
+
+// number imput selectors
+
+const buttonWrappers = document.querySelector(".secondBlock__services");
+
+let priceChange = 0;
+let inputPriceChange = 0;
+
+let firstPrice = 0;
+let firstPositionInput = 0;
+let secondPositionInput = 0;
+let secondPrice = 0;
+
+//list of additional services
+let listAdditionalServices = [];
+
+//an object made up of elements of mutual substitution, cant choose without, cant be removed without
 
 const choiceobj = {
   "mutually exclusive": {
@@ -38,137 +82,148 @@ const choiceobj = {
   },
 };
 
-let listAdditionalServices = [];
-
-async function fetchAll() {
-  const response = await fetch("1c_site.json");
-  const data = await response.json();
-  return data;
+function stopFunction(firstParametr, secondParametr) {
+  if (firstParametr == secondParametr) {
+    return;
+  }
 }
 
-async function createAdditionalServices(func) {
-  const parent = document.querySelector(".secondBlock__services");
-  const houseName = document.querySelector("#id");
-
-  const data = await func();
-
+function searchForTheRightHouse(data) {
   let itemHouse = {};
 
-  const housePageName = houseName.textContent;
-  data["Дома"].forEach((item) => {
-    const houseName = item["ДомКод"];
-
-    if (housePageName == houseName) {
-      itemHouse = item;
+  const housePageName = houseId.textContent;
+  data["Дома"].forEach((house) => {
+    const houseId = house["ДомКод"];
+    house;
+    if (housePageName == houseId) {
+      itemHouse = house;
     }
   });
 
-  const arrAllSectionsAndSubsections = [];
+  return itemHouse;
+}
 
-  const sections = itemHouse["Разделы"];
+function createAllsectionsAndSubsetions(data) {
+  const allSectionsAndSubsections = [];
 
-  sections.forEach((section) => {
-    if (section["Раздел"] == "Несортированно (технический раздел)") {
-      return;
-    }
+  searchForTheRightHouse(data)["Разделы"].forEach((section) => {
+    stopFunction(section["Раздел"], "Несортированно (технический раздел)");
 
-    arrAllSectionsAndSubsections.push(section["Раздел"]);
+    allSectionsAndSubsections.push(section["Раздел"]);
     section["Подразделы"].forEach((subsection) => {
       if (section["Раздел"] != subsection["Подраздел"]) {
-        arrAllSectionsAndSubsections.push(subsection);
+        allSectionsAndSubsections.push(subsection);
       }
     });
   });
-  const mainCost = document.querySelector(".firstBlock__button>span");
 
-  parent.innerHTML = arrAllSectionsAndSubsections
-    .map((item) => {
-      let activeClass = "inactiveBtn";
+  return allSectionsAndSubsections;
+}
 
-      if (
-        item == "Строительство дома в базовой комплектации" ||
-        item["Подраздел"] == "Строительство дома в базовой комплектации" ||
-        item["Подраздел"] == "Дом (в базовой комплектации)"
-      ) {
-        if (item["Подраздел"] == "Дом (в базовой комплектации)") {
-          startCost += item["Стоимость"];
-          cost.textContent = startCost;
-          mainCost.textContent = startCost;
-        }
-        return;
+function changePrice(item) {
+  startPrice += item["Стоимость"];
+  price.textContent = startPrice;
+  mainPrice.textContent = startPrice;
+}
+
+function activationOfRequiredService(item, itemName) {
+  changePrice(item);
+  listAdditionalServices.push(itemName);
+}
+
+function modalNumberInput(id, text, max) {
+  return `
+    <div class="secondBlock__service">
+      <div class="secondBlock__service-button" id="${id}">
+        <button class="secondBlock__service-buttonSelector inactiveBtn"></button>
+      </div>
+      <div class="secondBlock__service-text">
+        ${text}
+        <input class='secondBlock__service-input' type='number' min='0' max="${max}" value='0'/>
+      </div>
+    </div>
+  `;
+}
+
+function modalService(code, price, subsection, activeClass) {
+  return `
+    <div class="secondBlock__service">
+      <div class="secondBlock__service-button" id="${code}">
+          <button class="secondBlock__service-buttonSelector ${activeClass}" value="${price}"></button>
+      </div>
+      <div class="secondBlock__service-text">${subsection} + ${price} руб.</div>
+    </div>
+  `;
+}
+
+function modalSection(nameSection) {
+  return `
+    <div class="secondBlock__services-header">${nameSection}</div>
+  `;
+}
+
+function changeString(item) {
+  if (item["Подраздел"].indexOf("(из коллеции ЛХ)") != -1 || item["Подраздел"].indexOf("(из коллецкции ЛХ)") != -1) {
+    item["Подраздел"] = item["Подраздел"].split("(");
+    item["Подраздел"][1] = "из нашей коллекции)";
+    item["Подраздел"] = item["Подраздел"].join("(");
+  }
+}
+
+function createServiceElement(item) {
+  switch (typeof item) {
+    case "object":
+      switch (item["Подраздел"]) {
+        case "Строительство дома в базовой комплектации":
+          stopFunction(item["Подраздел"], "Строительство дома в базовой комплектации");
+          break;
+        case "Дом (в базовой комплектации)":
+          changePrice(item);
+          stopFunction(item["Подраздел"], "Дом (в базовой комплектации)");
+          break;
+        case "Колодец (кольцо)":
+          COAST_FOUNTAIN = item["Стоимость"];
+          return modalNumberInput("Устройство колодца", "Устройство колодца <b>(колец)</b>", "10");
+        case "Скважина (метр)":
+          COAST_WELL = item["Стоимость"];
+          return modalNumberInput("Скважина Пластик", "Скважина Пластик <b>(метров)</b>", "100");
+        default:
+          switch (item["Код"]) {
+            case "000000144":
+              activationOfRequiredService(item, "Имитация бруса");
+              return modalService(item["Код"], item["Стоимость"], item["Подраздел"], "activeBtn");
+            case "000000132":
+              activationOfRequiredService(item, "Стены и потолки: имитация бруса");
+              return modalService(item["Код"], item["Стоимость"], item["Подраздел"], "activeBtn");
+            default:
+              changeString(item);
+              return modalService(item["Код"], item["Стоимость"], item["Подраздел"], "inactiveBtn");
+          }
       }
-
-      if (item["Подраздел"] == "Колодец (кольцо)") {
-        COAST_FOUNTAIN = item["Стоимость"];
-        return `
-                <div class="secondBlock__service">
-                    <div class="secondBlock__service-button" id="Устройство колодца">
-                        <button class="secondBlock__service-buttonSelector inactiveBtn"></button>
-                    </div>
-                    <div class="secondBlock__service-text">
-                        Устройство колодца <b>(колец)</b> 
-                        <input class='secondBlock__service-input' type='number' min='0' max='100' value='0'/>
-                    </div>
-                </div>
-            `;
-      } else if (item["Подраздел"] == "Скважина (метр)") {
-        COAST_WELL = item["Стоимость"];
-        return `
-                <div class="secondBlock__service">
-                    <div class="secondBlock__service-button" id="Скважина Пластик">
-                        <button class="secondBlock__service-buttonSelector inactiveBtn"></button>
-                    </div>
-                    <div class="secondBlock__service-text">
-                        Скважина Пластик <b>(метров)</b> 
-                        <input class='secondBlock__service-input' type='number' min='0' max='10' value='0'/>
-                    </div>
-                </div>
-            `;
-      } else if (typeof item != "string") {
-        if (item["Код"] == "000000144") {
-          startCost += item["Стоимость"];
-          cost.textContent = startCost;
-          mainCost.textContent = startCost;
-          activeClass = "activeBtn";
-          listAdditionalServices.push("Имитация бруса");
-        } else if (item["Код"] == "000000132") {
-          startCost += item["Стоимость"];
-          cost.textContent = startCost;
-          mainCost.textContent = startCost;
-          activeClass = "activeBtn";
-          listAdditionalServices.push("Стены и потолки: имитация бруса");
-        }
-        return `
-                <div class="secondBlock__service">
-                    <div class="secondBlock__service-button" id="${item["Код"]}">
-                        <button class="secondBlock__service-buttonSelector ${activeClass}" value="${item["Стоимость"]}"></button>
-                    </div>
-                    <div class="secondBlock__service-text">${item["Подраздел"]} + ${item["Стоимость"]} руб.</div>
-                </div>
-            `;
-      } else {
-        return `
-                <div class="secondBlock__services-header">${item}</div>
-            `;
+      break;
+    case "string":
+      switch (item) {
+        case "Строительство дома в базовой комплектации":
+          stopFunction(item, "Строительство дома в базовой комплектации");
+          break;
+        default:
+          return modalSection(item);
       }
-    })
+      break;
+  }
+}
+
+// create all additional services
+
+async function createAdditionalServices(func) {
+  const data = await func();
+
+  servicesParent.innerHTML = createAllsectionsAndSubsetions(data)
+    .map((item) => createServiceElement(item))
     .join("");
 }
 
-createAdditionalServices(fetchAll);
-
 // slider house img
-
-const slidesModal = document.querySelectorAll(".firstBlock__field-img");
-const prevModal = document.querySelector(".firstBlock__carousel-left");
-const nextModal = document.querySelector(".firstBlock__carousel-right");
-const slideModalField = document.querySelector(".firstBlock__field");
-const mainSlide = document.querySelector(".firstBlock__carousel-item");
-
-let slideIndex = 1;
-const mediaQuerrymax = window.matchMedia("(max-width: 959px)");
-
-let lastSlideIndex = 0;
 
 function showSlides(n, transform, widthElem) {
   let translateCount = (slideIndex - 2) * -transform + "px";
@@ -176,6 +231,7 @@ function showSlides(n, transform, widthElem) {
 
   if (n > slidesModal.length) {
     slideIndex = 1;
+    slideModalField.style.transform = "translateX(0)";
   }
 
   if (n < 1) {
@@ -186,19 +242,11 @@ function showSlides(n, transform, widthElem) {
     slideModalField.style.transform = `translateX(${translateCount})`;
   }
 
-  if (slideIndex == slidesModal - 1) {
+  if (slideIndex == slidesModal - 1 || slideIndex - 3 == slidesModal.length - 3) {
     slideModalField.style.transform = `translateX(${lastTranslateCount})`;
   }
 
   if (translateCount == "100px" || translateCount == "0px") {
-    slideModalField.style.transform = "translateX(0)";
-  }
-
-  if (slideIndex - 3 == slidesModal.length - 3) {
-    slideModalField.style.transform = `translateX(${lastTranslateCount})`;
-  }
-
-  if (slidesModal.length == lastSlideIndex && slideIndex == 1) {
     slideModalField.style.transform = "translateX(0)";
   }
 
@@ -210,74 +258,97 @@ function showSlides(n, transform, widthElem) {
 
   lastSlideIndex = slideIndex;
 }
+
 function plusSlides(n, transform, widthElem) {
   showSlides((slideIndex += n), transform, widthElem);
 }
 
-prevModal.addEventListener("click", function () {
+function switchSlides(direction) {
   if (mediaQuerrymax.matches) {
-    plusSlides(-1, 95, -95);
+    plusSlides(direction, 95, -95);
   } else {
-    plusSlides(-1, 180, -180);
+    plusSlides(direction, 180, -180);
   }
-});
+}
 
-nextModal.addEventListener("click", function () {
-  if (mediaQuerrymax.matches) {
-    plusSlides(1, 95, -95);
-  } else {
-    plusSlides(1, 180, -180);
+function activateBtn(selector) {
+  if (selector.classList.contains("inactiveBtn")) {
+    selector.classList.add("activeBtn");
+    selector.classList.remove("inactiveBtn");
   }
-});
+}
 
-//open and close selection menu
+function deactivateBtn(selector) {
+  if (selector.classList.contains("activeBtn")) {
+    selector.classList.add("inactiveBtn");
+    selector.classList.remove("activeBtn");
+  }
+}
 
-const buttonWrappers = document.querySelector(".secondBlock__services");
-const selectionMenu = document.querySelector(".secondBlockMenu__menu");
+function removeFromArrayListAdittionalServices(indexElement) {
+  if (indexElement != -1) {
+    listAdditionalServices.splice(indexElement, 1);
+  }
+}
 
-let priceChange = 0;
-let inputPriceChange = 0;
+function priceChangeDueToFirstInput(firstPriceValue, action, value) {
+  console.log(action);
+  switch (action) {
+    case "+":
+      firstPrice = firstPriceValue;
+      inputPriceChange = inputPriceChange + firstPrice - inputPriceChange;
+      firstPositionInput = value;
+      break;
+    case "-":
+      firstPrice = firstPriceValue;
+      inputPriceChange = inputPriceChange - firstPositionInput * COAST_WELL;
+      firstPositionInput = value;
+      break;
+  }
+}
 
-let firstPrice = 0;
-let firstPositionInput = 0;
-let secondPositionInput = 0;
-let secondPrice = 0;
+function priceChangeDueToSecondInput(secondPriceValue, action, value) {
+  console.log(action);
+  switch (action) {
+    case "+":
+      secondPrice = secondPriceValue;
+      inputPriceChange = inputPriceChange + secondPrice - inputPriceChange;
+      secondPositionInput = value;
+      break;
+    case "-":
+      secondPrice = secondPriceValue;
+      inputPriceChange = secondPositionInput * COAST_FOUNTAIN;
+      secondPositionInput = value;
+      break;
+  }
+}
 
-buttonWrappers.addEventListener("input", (e) => {
+function actionOnNumberInputs(event) {
   const firstInput = document.getElementById(`Скважина Пластик`);
   const secondInput = document.getElementById(`Устройство колодца`);
   const firstActiveButton = document.getElementById("Скважина Пластик").querySelector("button");
   const secondActiveButton = document.getElementById("Устройство колодца").querySelector("button");
-
   if (
-    e.target.classList.contains("secondBlock__service-input") &&
-    e.target.parentNode.previousElementSibling.getAttribute("id") === "Скважина Пластик"
+    event.target.classList.contains("secondBlock__service-input") &&
+    event.target.parentNode.previousElementSibling.getAttribute("id") === "Скважина Пластик"
   ) {
-    let value = e.target.value;
+    let value = event.target.value;
 
-    if (value == "") {
-      return;
-    }
+    stopFunction(value, "");
 
-    if (secondActiveButton.classList.contains("activeBtn")) {
-      secondActiveButton.classList.add("inactiveBtn");
-      secondActiveButton.classList.remove("activeBtn");
-    }
+    deactivateBtn(secondActiveButton);
 
     const indexFirstInput = listAdditionalServices.indexOf(`Количество метров: ${firstPositionInput}`);
     const indexSecondInput = listAdditionalServices.indexOf(`Количество колец: ${secondPositionInput}`);
 
-    if (indexFirstInput != -1) {
-      listAdditionalServices.splice(indexFirstInput, 1);
-    }
+    removeFromArrayListAdittionalServices(indexFirstInput);
 
-    if (indexSecondInput != -1) {
-      listAdditionalServices.splice(indexSecondInput, 1);
-    }
+    removeFromArrayListAdittionalServices(indexSecondInput);
 
-    if (+value > 99) {
-      e.target.value = "100";
+    if (+value > 100) {
+      event.target.value = "100";
       value = "100";
+      return;
     }
 
     inputPriceChange -= secondPrice;
@@ -287,117 +358,86 @@ buttonWrappers.addEventListener("input", (e) => {
     secondPrice = 0;
 
     if (+value === 0) {
-      if (firstActiveButton.classList.contains("activeBtn")) {
-        firstActiveButton.classList.add("inactiveBtn");
-        firstActiveButton.classList.remove("activeBtn");
-      }
+      deactivateBtn(firstActiveButton);
 
-      inputPriceChange -= firstPositionInput * COAST_WELL;
-      firstPrice = 0;
-      firstPositionInput = value;
+      priceChangeDueToFirstInput(0, "-", value);
     } else if (+value > firstPositionInput) {
-      if (firstActiveButton.classList.contains("inactiveBtn")) {
-        firstActiveButton.classList.add("activeBtn");
-        firstActiveButton.classList.remove("inactiveBtn");
-      }
+      activateBtn(firstActiveButton);
 
-      firstPrice = +value * COAST_WELL;
-      inputPriceChange += firstPrice - inputPriceChange;
-      firstPositionInput = value;
+      priceChangeDueToFirstInput(+value * COAST_WELL, "+", value);
 
       listAdditionalServices.push(`Количество метров: ${firstPositionInput}`);
     } else if (+value < firstPositionInput) {
-      firstPrice = +value * COAST_WELL;
-      inputPriceChange += firstPrice - inputPriceChange;
-      firstPositionInput = value;
+      priceChangeDueToFirstInput(+value * COAST_WELL, "+", value);
 
       listAdditionalServices.push(`Количество метров: ${firstPositionInput}`);
     } else if (+value == firstPositionInput) {
-      firstPrice = +value * COAST_WELL;
-      inputPriceChange += firstPrice - inputPriceChange;
-      firstPositionInput = value;
+      priceChangeDueToFirstInput(+value * COAST_WELL, "+", value);
 
       listAdditionalServices.push(`Количество метров: ${firstPositionInput}`);
     }
 
     firstPositionInput = +value;
 
-    cost.textContent = startCost + priceChange + inputPriceChange;
+    price.textContent = startPrice + priceChange + inputPriceChange;
   } else if (
-    e.target.classList.contains("secondBlock__service-input") &&
-    e.target.parentNode.previousElementSibling.getAttribute("id") === "Устройство колодца"
+    event.target.classList.contains("secondBlock__service-input") &&
+    event.target.parentNode.previousElementSibling.getAttribute("id") === "Устройство колодца"
   ) {
-    let value = e.target.value;
+    let value = event.target.value;
 
-    if (value == "") {
-      return;
-    }
+    stopFunction(value, "");
 
-    if (firstActiveButton.classList.contains("activeBtn")) {
-      firstActiveButton.classList.add("inactiveBtn");
-      firstActiveButton.classList.remove("activeBtn");
-    }
+    deactivateBtn(firstActiveButton);
 
     const indexFirstInput = listAdditionalServices.indexOf(`Количество метров: ${firstPositionInput}`);
     const indexSecondInput = listAdditionalServices.indexOf(`Количество колец: ${secondPositionInput}`);
 
-    if (indexFirstInput != -1) {
-      listAdditionalServices.splice(indexFirstInput, 1);
-    }
+    removeFromArrayListAdittionalServices(indexFirstInput);
 
-    if (indexSecondInput != -1) {
-      listAdditionalServices.splice(indexSecondInput, 1);
-    }
+    removeFromArrayListAdittionalServices(indexSecondInput);
 
     inputPriceChange -= firstPrice;
+
     firstInput.nextElementSibling.querySelector("input").value = 0;
     firstPositionInput = 0;
     firstPrice = 0;
 
-    if (+value > 9) {
-      e.target.value = "10";
+    if (+value > 10) {
+      event.target.value = "10";
       value = "10";
+      return;
     }
 
     if (+value === 0) {
-      if (secondActiveButton.classList.contains("activeBtn")) {
-        secondActiveButton.classList.add("inactiveBtn");
-        secondActiveButton.classList.remove("activeBtn");
-      }
+      deactivateBtn(secondActiveButton);
 
-      inputPriceChange -= secondPositionInput * COAST_FOUNTAIN;
-      secondPrice = 0;
-      secondPositionInput = value;
+      priceChangeDueToSecondInput(0, "-", value);
     } else if (+value > secondPositionInput) {
-      if (secondActiveButton.classList.contains("inactiveBtn")) {
-        secondActiveButton.classList.add("activeBtn");
-        secondActiveButton.classList.remove("inactiveBtn");
-      }
+      activateBtn(secondActiveButton);
 
-      secondPrice = value * COAST_FOUNTAIN;
-      inputPriceChange += secondPrice - inputPriceChange;
-      secondPositionInput = e.target.value;
+      priceChangeDueToFirstInput(+value * COAST_FOUNTAIN, "+", value);
 
       listAdditionalServices.push(`Количество колец: ${secondPositionInput}`);
     } else if (+value < secondPositionInput) {
-      secondPrice = e.target.value * COAST_FOUNTAIN;
-      inputPriceChange += secondPrice - inputPriceChange;
-      secondPositionInput = e.target.value;
+      priceChangeDueToFirstInput(+value * COAST_FOUNTAIN, "+", value);
 
       listAdditionalServices.push(`Количество колец: ${secondPositionInput}`);
     } else if (+value == secondPositionInput) {
-      secondPrice = value * COAST_FOUNTAIN;
-      inputPriceChange += secondPrice - inputPriceChange;
-      secondPositionInput = value;
+      priceChangeDueToFirstInput(+value * COAST_FOUNTAIN, "+", value);
 
       listAdditionalServices.push(`Количество колец: ${secondPositionInput}`);
     }
 
     secondPositionInput = +value;
 
-    cost.textContent = startCost + priceChange + inputPriceChange;
+    price.textContent = startPrice + priceChange + inputPriceChange;
   }
-});
+}
+
+//open and close selection menu
+
+buttonWrappers.addEventListener("input", (event) => actionOnNumberInputs(event));
 // click select button
 
 buttonWrappers.addEventListener("click", (e) => {
@@ -557,7 +597,7 @@ buttonWrappers.addEventListener("click", (e) => {
 
           inputPriceChange = 0;
 
-          cost.textContent = startCost + priceChange + inputPriceChange;
+          price.textContent = startPrice + priceChange + inputPriceChange;
         } else if (id === "Скважина Пластик") {
           let firstInput = document.getElementById(`Скважина Пластик`).nextElementSibling.querySelector("input");
 
@@ -565,7 +605,7 @@ buttonWrappers.addEventListener("click", (e) => {
 
           inputPriceChange = 0;
 
-          cost.textContent = startCost + priceChange + inputPriceChange;
+          price.textContent = startPrice + priceChange + inputPriceChange;
         }
 
         let choiceElsId = "";
@@ -657,7 +697,7 @@ buttonWrappers.addEventListener("click", (e) => {
         priceChange -= value;
       }
 
-      cost.textContent = startCost + priceChange + inputPriceChange;
+      price.textContent = startPrice + priceChange + inputPriceChange;
     } else {
       const btn = target.parentNode.querySelector("button");
       const value = +btn.value;
@@ -804,7 +844,7 @@ buttonWrappers.addEventListener("click", (e) => {
 
           inputPriceChange = 0;
 
-          cost.textContent = startCost + priceChange + inputPriceChange;
+          price.textContent = startPrice + priceChange + inputPriceChange;
         } else if (id === "Скважина Пластик") {
           let firstInput = document.getElementById(`${COAST_WELL + "input"}`);
           let firstInputCounters = document.getElementById(`${COAST_WELL + "numberCounter"}`);
@@ -817,7 +857,7 @@ buttonWrappers.addEventListener("click", (e) => {
 
           inputPriceChange = 0;
 
-          cost.textContent = startCost + priceChange + inputPriceChange;
+          price.textContent = startPrice + priceChange + inputPriceChange;
         }
 
         let choiceElsId = "";
@@ -909,7 +949,7 @@ buttonWrappers.addEventListener("click", (e) => {
         priceChange -= value;
       }
 
-      cost.textContent = startCost + priceChange + inputPriceChange;
+      price.textContent = startPrice + priceChange + inputPriceChange;
     }
   }
 });
@@ -1059,3 +1099,9 @@ modals.forEach((modal) => {
     plusSlides(1);
   });
 });
+
+createAdditionalServices(fetchHouses);
+
+prevModal.addEventListener("click", () => switchSlides(-1));
+
+nextModal.addEventListener("click", () => switchSlides(1));
