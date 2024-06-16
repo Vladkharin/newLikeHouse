@@ -45,6 +45,32 @@ let secondPrice = 0;
 //list of additional services
 let listAdditionalServices = [];
 
+// slider
+
+const buttonsSpan = document.querySelectorAll(".secondBlock__service-span");
+const imgBtn = document.querySelector(".firstBlock__carousel-item");
+const modal = document.querySelector(`.modalMain.bgwhite`);
+const imgsField = document.querySelectorAll(".firstBlock__field-img");
+let slideIndexModal = 1;
+const buttonWrapper = modal.children[0];
+const btnClose = buttonWrapper.children[0];
+
+const mediaQuerrymax1200 = window.matchMedia("(max-width: 1199px)");
+const sliderImgsModal = modal.querySelectorAll(".modalMain__img");
+const btnNext = buttonWrapper.children[buttonWrapper.children.length - 2];
+const btnPrev = buttonWrapper.children[buttonWrapper.children.length - 1];
+
+const orderModal = document.querySelector(".orderModal");
+const orderModalWrapper = document.querySelector(".orderModal__wrapper");
+const formInputMask = orderModalWrapper.querySelector("input[type=tel]");
+const openButtonOrderModal = document.querySelector(".order");
+const closeButtonOrderModal = document.querySelector(".orderModal__close");
+const orders = document.querySelector(".orders");
+
+const mask = new IMask(formInputMask, {
+  mask: "+0 (000) 000-00-00",
+  lazy: true,
+});
 //an object made up of elements of mutual substitution, cant choose without, cant be removed without
 
 const choiceobj = {
@@ -82,12 +108,6 @@ const choiceobj = {
   },
 };
 
-function stopFunction(firstParametr, secondParametr) {
-  if (firstParametr == secondParametr) {
-    return;
-  }
-}
-
 function searchForTheRightHouse(data) {
   let itemHouse = {};
 
@@ -107,7 +127,9 @@ function createAllsectionsAndSubsetions(data) {
   const allSectionsAndSubsections = [];
 
   searchForTheRightHouse(data)["Разделы"].forEach((section) => {
-    stopFunction(section["Раздел"], "Несортированно (технический раздел)");
+    if (section["Раздел"] === "Несортированно (технический раздел)") {
+      return;
+    }
 
     allSectionsAndSubsections.push(section["Раздел"]);
     section["Подразделы"].forEach((subsection) => {
@@ -175,11 +197,15 @@ function createServiceElement(item) {
     case "object":
       switch (item["Подраздел"]) {
         case "Строительство дома в базовой комплектации":
-          stopFunction(item["Подраздел"], "Строительство дома в базовой комплектации");
+          if (item["Подраздел"] === "Строительство дома в базовой комплектации") {
+            return;
+          }
           break;
         case "Дом (в базовой комплектации)":
           changePrice(item);
-          stopFunction(item["Подраздел"], "Дом (в базовой комплектации)");
+          if (item["Подраздел"] === "Дом (в базовой комплектации)") {
+            return;
+          }
           break;
         case "Колодец (кольцо)":
           COAST_FOUNTAIN = item["Стоимость"];
@@ -204,7 +230,10 @@ function createServiceElement(item) {
     case "string":
       switch (item) {
         case "Строительство дома в базовой комплектации":
-          stopFunction(item, "Строительство дома в базовой комплектации");
+          if (item === "Строительство дома в базовой комплектации") {
+            return;
+          }
+
           break;
         default:
           return modalSection(item);
@@ -292,7 +321,6 @@ function removeFromArrayListAdittionalServices(indexElement) {
 }
 
 function priceChangeDueToFirstInput(firstPriceValue, action, value) {
-  console.log(action);
   switch (action) {
     case "+":
       firstPrice = firstPriceValue;
@@ -301,14 +329,16 @@ function priceChangeDueToFirstInput(firstPriceValue, action, value) {
       break;
     case "-":
       firstPrice = firstPriceValue;
+
       inputPriceChange = inputPriceChange - firstPositionInput * COAST_WELL;
+
       firstPositionInput = value;
+
       break;
   }
 }
 
 function priceChangeDueToSecondInput(secondPriceValue, action, value) {
-  console.log(action);
   switch (action) {
     case "+":
       secondPrice = secondPriceValue;
@@ -317,7 +347,7 @@ function priceChangeDueToSecondInput(secondPriceValue, action, value) {
       break;
     case "-":
       secondPrice = secondPriceValue;
-      inputPriceChange = secondPositionInput * COAST_FOUNTAIN;
+      inputPriceChange = inputPriceChange - secondPositionInput * COAST_FOUNTAIN;
       secondPositionInput = value;
       break;
   }
@@ -334,7 +364,9 @@ function actionOnNumberInputs(event) {
   ) {
     let value = event.target.value;
 
-    stopFunction(value, "");
+    if (value === "") {
+      return;
+    }
 
     deactivateBtn(secondActiveButton);
 
@@ -363,15 +395,20 @@ function actionOnNumberInputs(event) {
       priceChangeDueToFirstInput(0, "-", value);
     } else if (+value > firstPositionInput) {
       activateBtn(firstActiveButton);
+      console.log(4);
 
       priceChangeDueToFirstInput(+value * COAST_WELL, "+", value);
 
       listAdditionalServices.push(`Количество метров: ${firstPositionInput}`);
     } else if (+value < firstPositionInput) {
+      console.log(5);
+
       priceChangeDueToFirstInput(+value * COAST_WELL, "+", value);
 
       listAdditionalServices.push(`Количество метров: ${firstPositionInput}`);
     } else if (+value == firstPositionInput) {
+      console.log(6);
+
       priceChangeDueToFirstInput(+value * COAST_WELL, "+", value);
 
       listAdditionalServices.push(`Количество метров: ${firstPositionInput}`);
@@ -380,13 +417,37 @@ function actionOnNumberInputs(event) {
     firstPositionInput = +value;
 
     price.textContent = startPrice + priceChange + inputPriceChange;
+
+    event.target.addEventListener("blur", () => {
+      let id = event.target.parentNode.previousElementSibling.getAttribute("id");
+      let value = event.target.value;
+
+      value = 0;
+
+      if (!event.target.value) {
+        id = "Количество метров: " + firstPositionInput;
+        priceChangeDueToFirstInput(0, "-", value);
+
+        deactivateBtn(event.target.parentNode.previousElementSibling.children[0]);
+
+        const index = listAdditionalServices.indexOf(id);
+
+        removeFromArrayListAdittionalServices(index);
+
+        event.target.value = 0;
+
+        price.textContent = startPrice + priceChange + inputPriceChange;
+      }
+    });
   } else if (
     event.target.classList.contains("secondBlock__service-input") &&
     event.target.parentNode.previousElementSibling.getAttribute("id") === "Устройство колодца"
   ) {
     let value = event.target.value;
 
-    stopFunction(value, "");
+    if (value === "") {
+      return;
+    }
 
     deactivateBtn(firstActiveButton);
 
@@ -411,20 +472,25 @@ function actionOnNumberInputs(event) {
 
     if (+value === 0) {
       deactivateBtn(secondActiveButton);
+      print(value);
 
       priceChangeDueToSecondInput(0, "-", value);
     } else if (+value > secondPositionInput) {
       activateBtn(secondActiveButton);
-
-      priceChangeDueToFirstInput(+value * COAST_FOUNTAIN, "+", value);
+      console.log(1);
+      priceChangeDueToSecondInput(+value * COAST_FOUNTAIN, "+", value);
+      console.log(secondPositionInput);
+      console.log(value);
 
       listAdditionalServices.push(`Количество колец: ${secondPositionInput}`);
     } else if (+value < secondPositionInput) {
-      priceChangeDueToFirstInput(+value * COAST_FOUNTAIN, "+", value);
+      console.log(2);
+      priceChangeDueToSecondInput(+value * COAST_FOUNTAIN, "+", value);
 
       listAdditionalServices.push(`Количество колец: ${secondPositionInput}`);
     } else if (+value == secondPositionInput) {
-      priceChangeDueToFirstInput(+value * COAST_FOUNTAIN, "+", value);
+      console.log(3);
+      priceChangeDueToSecondInput(+value * COAST_FOUNTAIN, "+", value);
 
       listAdditionalServices.push(`Количество колец: ${secondPositionInput}`);
     }
@@ -432,533 +498,335 @@ function actionOnNumberInputs(event) {
     secondPositionInput = +value;
 
     price.textContent = startPrice + priceChange + inputPriceChange;
+
+    event.target.addEventListener("blur", () => {
+      let id = event.target.parentNode.previousElementSibling.getAttribute("id");
+      let value = event.target.value;
+
+      value = 0;
+
+      if (!event.target.value) {
+        id = "Количество колец: " + secondPositionInput;
+        priceChangeDueToSecondInput(0, "-", value);
+
+        deactivateBtn(event.target.parentNode.previousElementSibling.children[0]);
+
+        const index = listAdditionalServices.indexOf(id);
+
+        removeFromArrayListAdittionalServices(index);
+
+        event.target.value = 0;
+
+        price.textContent = startPrice + priceChange + inputPriceChange;
+      }
+    });
   }
 }
 
-//open and close selection menu
+function searchForElementText(id) {
+  const neighbourArr = document.getElementById(id).nextElementSibling.textContent.split(" ");
 
-buttonWrappers.addEventListener("input", (event) => actionOnNumberInputs(event));
-// click select button
+  const neighbourStr = neighbourArr.slice(0, neighbourArr.length - 3).join(" ");
 
-buttonWrappers.addEventListener("click", (e) => {
-  const target = e.target;
+  return neighbourStr;
+}
+
+function actionOnActiveButton(btn, value) {
+  const id = btn.parentNode.getAttribute("id");
+
+  if (id === "Устройство колодца") {
+    let secondInput = document.getElementById(`Устройство колодца`).nextElementSibling.querySelector("input");
+
+    secondInput.value = 0;
+
+    inputPriceChange = 0;
+
+    price.textContent = startPrice + priceChange + inputPriceChange;
+  } else if (id === "Скважина Пластик") {
+    let firstInput = document.getElementById(`Скважина Пластик`).nextElementSibling.querySelector("input");
+
+    firstInput.value = 0;
+
+    inputPriceChange = 0;
+
+    price.textContent = startPrice + priceChange + inputPriceChange;
+  }
+
+  let choiceElsId = "";
+  let choice = "";
+  if (choiceobj["cant be removed without"][id]) {
+    choiceElsId = choiceobj["cant be removed without"][id];
+    choice = "cant be removed without";
+  } else if (choiceobj["cant choose without"][id]) {
+    choiceElsId = choiceobj["cant choose without"][id];
+    choice = "cant choose without";
+  }
+
+  if (choiceElsId && choice == "cant be removed without") {
+    choiceElsId.forEach((elId) => {
+      const el = document.getElementById(`${elId}`);
+
+      let elChildren = "";
+      if (!el) {
+        return;
+      } else {
+        elChildren = el.children[0];
+      }
+
+      const indexEl = listAdditionalServices.indexOf(searchForElementText(elId));
+      if (indexEl !== -1) {
+        listAdditionalServices.splice(indexEl, 1);
+
+        deactivateBtn(elChildren);
+
+        priceChange -= +elChildren.getAttribute("value");
+      }
+    });
+    const indexEl = listAdditionalServices.indexOf(id);
+    listAdditionalServices.splice(indexEl, 1);
+  } else if (choiceElsId && choice == "cant choose without") {
+    choiceElsId.forEach((elId) => {
+      console.log(choiceElsId);
+      const el = document.getElementById(`${elId}`);
+
+      let elChildren = "";
+      if (!el) {
+        return;
+      } else {
+        elChildren = el.children[0];
+      }
+
+      const indexEl = listAdditionalServices.indexOf(searchForElementText(elId));
+
+      if (indexEl !== -1) {
+        console.log(1);
+
+        listAdditionalServices.splice(indexEl, 1);
+
+        deactivateBtn(elChildren);
+
+        priceChange -= +elChildren.getAttribute("value");
+      }
+    });
+
+    const indexEl = listAdditionalServices.indexOf(searchForElementText(id));
+    listAdditionalServices.splice(indexEl, 1);
+  } else {
+    if (id === "000000102" || id === "000000101" || id === "000000105") {
+      const facadeImitation = document.getElementById("000000144").querySelector("button");
+
+      if (facadeImitation.classList.contains("inactiveBtn")) {
+        listAdditionalServices.push("Имитация бруса");
+
+        activateBtn(facadeImitation);
+
+        priceChange += +facadeImitation.getAttribute("value");
+      }
+    } else if (id === "000000106") {
+      const facadeImitation = document.getElementById("000000132").querySelector("button");
+
+      if (facadeImitation.classList.contains("inactiveBtn")) {
+        listAdditionalServices.push("Стены и потолки: имитация бруса");
+
+        activateBtn(facadeImitation);
+
+        priceChange += +facadeImitation.getAttribute("value");
+      }
+    } else if (id === "000000144") {
+      return;
+    } else if (id === "000000132") {
+      return;
+    }
+
+    const indexEl = listAdditionalServices.indexOf(searchForElementText(id));
+    listAdditionalServices.splice(indexEl, 1);
+  }
+
+  deactivateBtn(btn);
+  priceChange -= value;
+
+  console.log(listAdditionalServices);
+}
+
+function actionOnInactiveButton(btn, value) {
+  const id = btn.parentNode.getAttribute("id");
+
+  if (id === "Скважина Пластик" || id === "Устройство колодца") {
+    return;
+  }
+
+  if (id === "000000101") {
+    const el = document.getElementById("000000144").children[0];
+    const secondEl = document.getElementById("000000105").children[0];
+    if (el.classList.contains("inactiveBtn") && secondEl.classList.contains("inactiveBtn")) {
+      priceChange += +el.getAttribute("value");
+      el.classList.add("activeBtn");
+      el.classList.remove("inactiveBtn");
+      activateBtn(el);
+      listAdditionalServices.push("Имитация бруса");
+    }
+  }
+
+  listAdditionalServices.push(searchForElementText(id));
+
+  let choiceElsId = "";
+  let choice = "";
+
+  if (choiceobj["cant choose without"][id]) {
+    choiceElsId = choiceobj["cant choose without"][id];
+    choice = "cant choose without";
+  } else if (choiceobj["mutually exclusive"][id]) {
+    choiceElsId = choiceobj["mutually exclusive"][id];
+    choice = "mutually exclusive";
+  }
+
+  if (choiceElsId && choice == "mutually exclusive") {
+    choiceElsId.forEach((elId) => {
+      const el = document.getElementById(`${elId}`);
+      let elChildren = "";
+      if (!el) {
+        return;
+      } else {
+        elChildren = el.children[0];
+      }
+
+      if (choiceobj["cant choose without"][`${elId}`]) {
+        const choiceEls = choiceobj["cant choose without"][`${elId}`];
+        choiceEls.forEach((choiceElId) => {
+          const choiceEl = document.getElementById(`${choiceElId}`).children[0];
+          const index = listAdditionalServices.indexOf(choiceElId);
+
+          if (index !== -1) {
+            listAdditionalServices.splice(index, 1);
+
+            deactivateBtn(choiceEl);
+
+            priceChange -= +choiceEl.getAttribute("value");
+          }
+        });
+      }
+
+      if (elChildren.classList.contains("activeBtn")) {
+        deactivateBtn(elChildren);
+
+        priceChange -= +elChildren.getAttribute("value");
+
+        const index = listAdditionalServices.indexOf(searchForElementText(elId));
+
+        removeFromArrayListAdittionalServices(index);
+      }
+    });
+  } else if (choiceElsId && choice == "cant choose without") {
+    choiceElsId.forEach((elId) => {
+      const el = document.getElementById(`${elId}`);
+
+      let elChildren = "";
+      if (!el) {
+        return;
+      } else {
+        elChildren = el.children[0];
+      }
+
+      if (choiceobj["mutually exclusive"][id]) {
+        const choiceEls = choiceobj["mutually exclusive"][id];
+        choiceEls.forEach((choiceElId) => {
+          if (choiceobj["cant be removed without"][elId]) {
+            const element = document.getElementById(`${choiceElId}`);
+            let elementChildren = "";
+            if (!element) {
+              return;
+            } else {
+              elementChildren = element.children[0];
+            }
+
+            const indexEl = listAdditionalServices.indexOf(choiceElId);
+
+            if (indexEl !== -1) {
+              listAdditionalServices.splice(indexEl, 1);
+              priceChange -= +elementChildren.getAttribute("value");
+              deactivateBtn(elementChildren);
+            }
+          }
+
+          const choiceEl = document.getElementById(`${choiceElId}`);
+
+          let choiceElChildren = "";
+          if (!choiceEl) {
+            return;
+          } else {
+            choiceElChildren = choiceEl.children[0];
+          }
+          const index = listAdditionalServices.indexOf(choiceElChildren);
+
+          if (index !== -1) {
+            listAdditionalServices.splice(index, 1);
+            priceChange -= +choiceElChildren.getAttribute("value");
+            deactivateBtn(choiceElChildren);
+          }
+        });
+      }
+
+      if (elChildren.classList.contains("inactiveBtn")) {
+        activateBtn(elChildren);
+
+        priceChange += +elChildren.getAttribute("value");
+
+        const index = listAdditionalServices.indexOf(searchForElementText(elId));
+
+        if (index == -1) {
+          listAdditionalServices.push(searchForElementText(elId));
+        }
+      }
+    });
+  }
+
+  activateBtn(btn);
+  priceChange += value;
+
+  console.log(listAdditionalServices);
+}
+
+function actionOnButtonField(target) {
+  const btn = target.querySelector("button");
+  const value = +btn.value;
+
+  if (btn.classList.contains("inactiveBtn")) {
+    actionOnInactiveButton(btn, value);
+  } else {
+    actionOnActiveButton(btn, value);
+  }
+
+  price.textContent = startPrice + priceChange + inputPriceChange;
+}
+
+function actionOnButton(target) {
+  const btn = target.parentNode.querySelector("button");
+  const value = +btn.value;
+
+  if (btn.classList.contains("inactiveBtn")) {
+    actionOnInactiveButton(btn, value);
+  } else {
+    actionOnActiveButton(btn, value);
+  }
+
+  price.textContent = startPrice + priceChange + inputPriceChange;
+}
+
+function actionOnButtonWrapper(event) {
+  const target = event.target;
   if (
     target.classList.contains("secondBlock__service-button") ||
     target.classList.contains("secondBlock__service-buttonSelector")
   ) {
     if (target.classList.contains("secondBlock__service-button")) {
-      const btn = target.querySelector("button");
-      const value = +btn.value;
-
-      if (btn.classList.contains("inactiveBtn")) {
-        const id = btn.parentNode.getAttribute("id");
-
-        if (id === "Скважина Пластик" || id === "Устройство колодца") {
-          return;
-        }
-
-        if (id === "000000101") {
-          const el = document.getElementById("000000144").children[0];
-          const secondEl = document.getElementById("000000105").children[0];
-          if (el.classList.contains("inactiveBtn") && secondEl.classList.contains("inactiveBtn")) {
-            priceChange += +el.getAttribute("value");
-            el.classList.add("activeBtn");
-            el.classList.remove("inactiveBtn");
-            listAdditionalServices.push("Имитация бруса");
-          }
-        }
-
-        listAdditionalServices.push(id);
-
-        let choiceElsId = "";
-        let choice = "";
-
-        if (choiceobj["cant choose without"][id]) {
-          choiceElsId = choiceobj["cant choose without"][id];
-          choice = "cant choose without";
-        } else if (choiceobj["mutually exclusive"][id]) {
-          choiceElsId = choiceobj["mutually exclusive"][id];
-          choice = "mutually exclusive";
-        }
-
-        if (choiceElsId && choice == "mutually exclusive") {
-          choiceElsId.forEach((elId) => {
-            const el = document.getElementById(`${elId}`);
-            let elChildren = "";
-            if (!el) {
-              return;
-            } else {
-              elChildren = el.children[0];
-            }
-
-            if (choiceobj["cant choose without"][`${elId}`]) {
-              const choiceEls = choiceobj["cant choose without"][`${elId}`];
-              choiceEls.forEach((choiceElId) => {
-                const choiceEl = document.getElementById(`${choiceElId}`).children[0];
-                const index = listAdditionalServices.indexOf(choiceElId);
-
-                if (index !== -1) {
-                  listAdditionalServices.splice(index, 1);
-                  choiceEl.classList.add("inactiveBtn");
-                  choiceEl.classList.remove("activeBtn");
-                  priceChange -= +choiceEl.getAttribute("value");
-                }
-              });
-            }
-
-            if (elChildren.classList.contains("activeBtn")) {
-              elChildren.classList.remove("activeBtn");
-              elChildren.classList.add("inactiveBtn");
-
-              priceChange -= +elChildren.getAttribute("value");
-              const index = listAdditionalServices.indexOf(elId);
-
-              if (index != -1) {
-                listAdditionalServices.splice(index, 1);
-              }
-            }
-          });
-        } else if (choiceElsId && choice == "cant choose without") {
-          choiceElsId.forEach((elId) => {
-            const el = document.getElementById(`${elId}`);
-
-            let elChildren = "";
-            if (!el) {
-              return;
-            } else {
-              elChildren = el.children[0];
-            }
-
-            if (choiceobj["mutually exclusive"][id]) {
-              const choiceEls = choiceobj["mutually exclusive"][id];
-              choiceEls.forEach((choiceElId) => {
-                if (choiceobj["cant be removed without"][elId]) {
-                  const element = document.getElementById(`${choiceElId}`);
-                  let elementChildren = "";
-                  if (!element) {
-                    return;
-                  } else {
-                    elementChildren = element.children[0];
-                  }
-
-                  const indexEl = listAdditionalServices.indexOf(choiceElId);
-
-                  if (indexEl !== -1) {
-                    listAdditionalServices.splice(indexEl, 1);
-                    priceChange -= +elementChildren.getAttribute("value");
-                    elementChildren.classList.add("inactiveBtn");
-                    elementChildren.classList.remove("activeBtn");
-                  }
-                }
-
-                const choiceEl = document.getElementById(`${choiceElId}`);
-
-                let choiceElChildren = "";
-                if (!choiceEl) {
-                  return;
-                } else {
-                  choiceElChildren = choiceEl.children[0];
-                }
-                const index = listAdditionalServices.indexOf(choiceElChildren);
-
-                if (index !== -1) {
-                  listAdditionalServices.splice(index, 1);
-                  priceChange -= +choiceElChildren.getAttribute("value");
-                  choiceElChildren.classList.add("inactiveBtn");
-                  choiceElChildren.classList.remove("activeBtn");
-                }
-              });
-            }
-
-            if (elChildren.classList.contains("inactiveBtn")) {
-              elChildren.classList.remove("inactiveBtn");
-              elChildren.classList.add("activeBtn");
-
-              priceChange += +elChildren.getAttribute("value");
-              const index = listAdditionalServices.indexOf(elId);
-
-              if (index == -1) {
-                listAdditionalServices.push(elId);
-              }
-            }
-          });
-        }
-
-        btn.classList.add("activeBtn");
-        btn.classList.remove("inactiveBtn");
-        priceChange += value;
-      } else {
-        const id = btn.parentNode.getAttribute("id");
-
-        if (id === "Устройство колодца") {
-          let secondInput = document.getElementById(`Устройство колодца`).nextElementSibling.querySelector("input");
-
-          secondInput.value = 0;
-
-          inputPriceChange = 0;
-
-          price.textContent = startPrice + priceChange + inputPriceChange;
-        } else if (id === "Скважина Пластик") {
-          let firstInput = document.getElementById(`Скважина Пластик`).nextElementSibling.querySelector("input");
-
-          firstInput.value = 0;
-
-          inputPriceChange = 0;
-
-          price.textContent = startPrice + priceChange + inputPriceChange;
-        }
-
-        let choiceElsId = "";
-        let choice = "";
-        if (choiceobj["cant be removed without"][id]) {
-          choiceElsId = choiceobj["cant be removed without"][id];
-          choice = "cant be removed without";
-        } else if (choiceobj["cant choose without"][id]) {
-          choiceElsId = choiceobj["cant choose without"][id];
-          choice = "cant choose without";
-        }
-
-        if (choiceElsId && choice == "cant be removed without") {
-          choiceElsId.forEach((elId) => {
-            const el = document.getElementById(`${elId}`);
-
-            let elChildren = "";
-            if (!el) {
-              return;
-            } else {
-              elChildren = el.children[0];
-            }
-
-            const indexEl = listAdditionalServices.indexOf(elId);
-            if (indexEl !== -1) {
-              listAdditionalServices.splice(indexEl, 1);
-              elChildren.classList.add("inactiveBtn");
-              elChildren.classList.remove("activeBtn");
-
-              priceChange -= +elChildren.getAttribute("value");
-            }
-          });
-          const indexEl = listAdditionalServices.indexOf(id);
-          listAdditionalServices.splice(indexEl, 1);
-        } else if (choiceElsId && choice == "cant choose without") {
-          choiceElsId.forEach((elId) => {
-            const el = document.getElementById(`${elId}`);
-
-            let elChildren = "";
-            if (!el) {
-              return;
-            } else {
-              elChildren = el.children[0];
-            }
-            const indexEl = listAdditionalServices.indexOf(elId);
-
-            if (indexEl !== -1) {
-              listAdditionalServices.splice(indexEl, 1);
-
-              elChildren.classList.add("inactiveBtn");
-              elChildren.classList.remove("activeBtn");
-
-              priceChange -= +elChildren.getAttribute("value");
-            }
-          });
-          const indexEl = listAdditionalServices.indexOf(id);
-          listAdditionalServices.splice(indexEl, 1);
-        } else {
-          if (id === "000000102" || id === "000000101" || id === "000000105") {
-            const facadeImitation = document.getElementById("000000144").querySelector("button");
-
-            if (facadeImitation.classList.contains("inactiveBtn")) {
-              listAdditionalServices.push("Имитация бруса");
-              facadeImitation.classList.add("activeBtn");
-              facadeImitation.classList.remove("inactiveBtn");
-              priceChange += +facadeImitation.getAttribute("value");
-            }
-          } else if (id === "000000106") {
-            const facadeImitation = document.getElementById("000000132").querySelector("button");
-
-            if (facadeImitation.classList.contains("inactiveBtn")) {
-              listAdditionalServices.push("Стены и потолки: имитация бруса");
-              facadeImitation.classList.add("activeBtn");
-              facadeImitation.classList.remove("inactiveBtn");
-              priceChange += +facadeImitation.getAttribute("value");
-            }
-          } else if (id === "000000144") {
-            return;
-          } else if (id === "000000132") {
-            return;
-          }
-
-          const indexEl = listAdditionalServices.indexOf(id);
-          listAdditionalServices.splice(indexEl, 1);
-        }
-
-        btn.classList.add("inactiveBtn");
-        btn.classList.remove("activeBtn");
-        priceChange -= value;
-      }
-
-      price.textContent = startPrice + priceChange + inputPriceChange;
+      actionOnButtonField(target);
     } else {
-      const btn = target.parentNode.querySelector("button");
-      const value = +btn.value;
-
-      if (btn.classList.contains("inactiveBtn")) {
-        const id = btn.parentNode.getAttribute("id");
-
-        if (id === "Скважина Пластик" || id === "Устройство колодца") {
-          return;
-        }
-
-        if (id === "000000101") {
-          const el = document.getElementById("000000144").children[0];
-          const secondEl = document.getElementById("000000105").children[0];
-          if (el.classList.contains("inactiveBtn") && secondEl.classList.contains("inactiveBtn")) {
-            priceChange += +el.getAttribute("value");
-            el.classList.add("activeBtn");
-            el.classList.remove("inactiveBtn");
-            listAdditionalServices.push("Имитация бруса");
-          }
-        }
-        listAdditionalServices.push(id);
-
-        let choiceElsId = "";
-        let choice = "";
-
-        if (choiceobj["cant choose without"][id]) {
-          choiceElsId = choiceobj["cant choose without"][id];
-          choice = "cant choose without";
-        } else if (choiceobj["mutually exclusive"][id]) {
-          choiceElsId = choiceobj["mutually exclusive"][id];
-          choice = "mutually exclusive";
-        }
-
-        if (choiceElsId && choice == "mutually exclusive") {
-          choiceElsId.forEach((elId) => {
-            const el = document.getElementById(`${elId}`);
-
-            let elChildren = "";
-            if (!el) {
-              return;
-            } else {
-              elChildren = el.children[0];
-            }
-            if (choiceobj["cant choose without"][`${elId}`]) {
-              const choiceEls = choiceobj["cant choose without"][`${elId}`];
-              choiceEls.forEach((choiceElId) => {
-                const choiceEl = document.getElementById(`${choiceElId}`).children[0];
-                const index = listAdditionalServices.indexOf(choiceElId);
-
-                if (index !== -1) {
-                  listAdditionalServices.splice(index, 1);
-                  choiceEl.classList.add("inactiveBtn");
-                  choiceEl.classList.remove("activeBtn");
-                  priceChange -= +choiceEl.getAttribute("value");
-                }
-              });
-            }
-
-            if (elChildren.classList.contains("activeBtn")) {
-              elChildren.classList.remove("activeBtn");
-              elChildren.classList.add("inactiveBtn");
-
-              priceChange -= +elChildren.getAttribute("value");
-              const index = listAdditionalServices.indexOf(elId);
-
-              if (index != -1) {
-                listAdditionalServices.splice(index, 1);
-              }
-            }
-          });
-        } else if (choiceElsId && choice == "cant choose without") {
-          choiceElsId.forEach((elId) => {
-            const el = document.getElementById(`${elId}`);
-
-            let elChildren = "";
-            if (!el) {
-              return;
-            } else {
-              elChildren = el.children[0];
-            }
-            if (choiceobj["mutually exclusive"][id]) {
-              const choiceEls = choiceobj["mutually exclusive"][id];
-              choiceEls.forEach((choiceElId) => {
-                if (choiceobj["cant be removed without"][elId]) {
-                  const element = document.getElementById(`${elId}`).children[0];
-                  const indexEl = listAdditionalServices.indexOf(elId);
-
-                  if (indexEl !== -1) {
-                    listAdditionalServices.splice(indexEl, 1);
-                    priceChange -= +element.getAttribute("value");
-                    element.classList.add("inactiveBtn");
-                    element.classList.remove("activeBtn");
-                  }
-                }
-                const choiceEl = document.getElementById(`${choiceElId}`);
-
-                let choiceElChildren = "";
-                if (!choiceEl) {
-                  return;
-                } else {
-                  choiceElChildren = choiceEl.children[0];
-                }
-                const index = listAdditionalServices.indexOf(choiceElChildren);
-
-                if (index !== -1) {
-                  listAdditionalServices.splice(index, 1);
-                  priceChange -= +choiceElChildren.getAttribute("value");
-                  choiceElChildren.classList.add("inactiveBtn");
-                  choiceElChildren.classList.remove("activeBtn");
-                }
-              });
-            }
-
-            if (elChildren.classList.contains("inactiveBtn")) {
-              elChildren.classList.remove("inactiveBtn");
-              elChildren.classList.add("activeBtn");
-
-              priceChange += +elChildren.getAttribute("value");
-              const index = listAdditionalServices.indexOf(elId);
-
-              if (index == -1) {
-                listAdditionalServices.push(elId);
-              }
-            }
-          });
-        }
-
-        btn.classList.add("activeBtn");
-        btn.classList.remove("inactiveBtn");
-        priceChange += value;
-      } else {
-        const id = btn.parentNode.getAttribute("id");
-
-        if (id === "Устройство колодца") {
-          let secondInput = document.getElementById(`${COAST_FOUNTAIN + "input"}`);
-          let secondInputCounters = document.getElementById(`${COAST_FOUNTAIN + "numberCounter"}`);
-          let secondInputProgressBar = document.getElementById(`${COAST_FOUNTAIN + "progressBar"}`);
-
-          secondInputProgressBar.style.width = 0 + "px";
-          secondInputCounters.style.left = 0 + "px";
-          secondInputCounters.textContent = 0;
-          secondInput.value = 0;
-
-          inputPriceChange = 0;
-
-          price.textContent = startPrice + priceChange + inputPriceChange;
-        } else if (id === "Скважина Пластик") {
-          let firstInput = document.getElementById(`${COAST_WELL + "input"}`);
-          let firstInputCounters = document.getElementById(`${COAST_WELL + "numberCounter"}`);
-          let firstInputProgressBar = document.getElementById(`${COAST_WELL + "progressBar"}`);
-
-          firstInputProgressBar.style.width = 0 + "px";
-          firstInputCounters.style.left = 0 + "px";
-          firstInputCounters.textContent = 0;
-          firstInput.value = 0;
-
-          inputPriceChange = 0;
-
-          price.textContent = startPrice + priceChange + inputPriceChange;
-        }
-
-        let choiceElsId = "";
-        let choice = "";
-        if (choiceobj["cant be removed without"][id]) {
-          choiceElsId = choiceobj["cant be removed without"][id];
-          choice = "cant be removed without";
-        } else if (choiceobj["cant choose without"][id]) {
-          choiceElsId = choiceobj["cant choose without"][id];
-          choice = "cant choose without";
-        }
-
-        if (choiceElsId && choice == "cant be removed without") {
-          choiceElsId.forEach((elId) => {
-            const el = document.getElementById(`${elId}`);
-
-            let elChildren = "";
-            if (!el) {
-              return;
-            } else {
-              elChildren = el.children[0];
-            }
-
-            const indexEl = listAdditionalServices.indexOf(elId);
-            if (indexEl !== -1) {
-              listAdditionalServices.splice(indexEl, 1);
-              elChildren.classList.add("inactiveBtn");
-              elChildren.classList.remove("activeBtn");
-
-              priceChange -= +elChildren.getAttribute("value");
-            }
-          });
-          const indexEl = listAdditionalServices.indexOf(id);
-          listAdditionalServices.splice(indexEl, 1);
-        } else if (choiceElsId && choice == "cant choose without") {
-          choiceElsId.forEach((elId) => {
-            const el = document.getElementById(`${elId}`);
-
-            let elChildren = "";
-            if (!el) {
-              return;
-            } else {
-              elChildren = el.children[0];
-            }
-            const indexEl = listAdditionalServices.indexOf(elId);
-
-            if (indexEl !== -1) {
-              listAdditionalServices.splice(indexEl, 1);
-
-              elChildren.classList.add("inactiveBtn");
-              elChildren.classList.remove("activeBtn");
-
-              priceChange -= +elChildren.getAttribute("value");
-            }
-          });
-          const indexEl = listAdditionalServices.indexOf(id);
-          listAdditionalServices.splice(indexEl, 1);
-        } else {
-          if (id === "000000102" || id === "000000101" || id === "000000105") {
-            const facadeImitation = document.getElementById("000000144").querySelector("button");
-
-            if (facadeImitation.classList.contains("inactiveBtn")) {
-              listAdditionalServices.push("Имитация бруса");
-              facadeImitation.classList.add("activeBtn");
-              facadeImitation.classList.remove("inactiveBtn");
-              priceChange += +facadeImitation.getAttribute("value");
-            }
-          } else if (id === "000000106") {
-            const facadeImitation = document.getElementById("000000132").querySelector("button");
-
-            if (facadeImitation.classList.contains("inactiveBtn")) {
-              listAdditionalServices.push("Стены и потолки: имитация бруса");
-              facadeImitation.classList.add("activeBtn");
-              facadeImitation.classList.remove("inactiveBtn");
-              priceChange += +facadeImitation.getAttribute("value");
-            }
-          } else if (id === "000000144") {
-            return;
-          } else if (id === "000000132") {
-            return;
-          }
-
-          const indexEl = listAdditionalServices.indexOf(id);
-          listAdditionalServices.splice(indexEl, 1);
-        }
-
-        btn.classList.add("inactiveBtn");
-        btn.classList.remove("activeBtn");
-        priceChange -= value;
-      }
-
-      price.textContent = startPrice + priceChange + inputPriceChange;
+      actionOnButton(target);
     }
   }
-});
+}
 
-const buttonsSpan = document.querySelectorAll(".secondBlock__service-span");
-const imgBtn = document.querySelector(".firstBlock__carousel-item");
-const modal = document.querySelector(`.modalMain.bgwhite`);
-const imgsField = document.querySelectorAll(".firstBlock__field-img");
-let slideIndexModal = 1;
+// click select button
 
 imgsField.forEach((imgField, index) => {
   imgField.addEventListener("click", () => {
@@ -970,7 +838,7 @@ imgsField.forEach((imgField, index) => {
   });
 });
 
-imgBtn.addEventListener("click", () => {
+function openModal() {
   modal.classList.add("visible");
   modal.classList.remove("notVisible");
   document.body.style.overflow = "hidden";
@@ -980,30 +848,15 @@ imgBtn.addEventListener("click", () => {
       showSlidesModal(slideIndexModal);
     }
   });
-});
+}
 
-const buttonWrapper = modal.children[0];
-const btnClose = buttonWrapper.children[0];
-btnClose.addEventListener("click", (e) => {
-  if (modal.classList.contains("visible")) {
-    modal.classList.remove("visible");
-    modal.classList.add("notVisible");
+function closeModal(conditionSelector, selector) {
+  if (conditionSelector.classList.contains("visible")) {
+    selector.classList.remove("visible");
+    selector.classList.add("notVisible");
     document.body.style.overflow = "";
   }
-});
-
-buttonWrapper.addEventListener("click", (e) => {
-  if (e.target.classList.contains("modal__wrapper")) {
-    modal.classList.remove("visible");
-    modal.classList.add("notVisible");
-    document.body.style.overflow = "";
-  }
-});
-
-const mediaQuerrymax1200 = window.matchMedia("(max-width: 1199px)");
-const sliderImgsModal = modal.querySelectorAll(".modalMain__img");
-const btnNext = buttonWrapper.children[buttonWrapper.children.length - 2];
-const btnPrev = buttonWrapper.children[buttonWrapper.children.length - 1];
+}
 
 function showSlidesModal(n) {
   if (n > sliderImgsModal.length) {
@@ -1100,8 +953,48 @@ modals.forEach((modal) => {
   });
 });
 
+function openOrderModal() {
+  orderModal.classList.add("visible");
+  orderModal.classList.remove("notVisible");
+  document.body.style.overflow = "hidden";
+
+  const orderWrapper = document.createElement("div");
+  orderWrapper.setAttribute("class", "orderWrapper");
+  orderModalWrapper.children[1].appendChild(orderWrapper);
+
+  orderWrapper.innerHTML = listAdditionalServices.map((item) => `<div class='orderItem'>${item}</div>`).join("");
+  orders.innerHTML += `<p class='total'>Итого: ${startPrice + priceChange + inputPriceChange}</p>`;
+}
+
+function closeOrderModal(conditionSelector, selector) {
+  if (conditionSelector.classList.contains("visible")) {
+    selector.classList.remove("visible");
+    selector.classList.add("notVisible");
+    document.body.style.overflow = "";
+
+    const orderWrapper = selector.querySelector(".orderWrapper");
+    const total = selector.querySelector(".total");
+    orderWrapper.remove();
+    total.remove();
+  }
+}
+
 createAdditionalServices(fetchHouses);
 
 prevModal.addEventListener("click", () => switchSlides(-1));
 
 nextModal.addEventListener("click", () => switchSlides(1));
+
+buttonWrappers.addEventListener("input", (event) => actionOnNumberInputs(event));
+
+buttonWrappers.addEventListener("click", (event) => actionOnButtonWrapper(event));
+
+imgBtn.addEventListener("click", () => openModal());
+
+btnClose.addEventListener("click", () => closeModal(modal, modal));
+
+buttonWrapper.addEventListener("click", (event) => closeModal(event.target, modal));
+
+openButtonOrderModal.addEventListener("click", () => openOrderModal());
+
+closeButtonOrderModal.addEventListener("click", () => closeOrderModal(orderModal, orderModal));

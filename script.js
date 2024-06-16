@@ -89,17 +89,17 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   function checkTheTargetInTheMenu(event) {
-    target = event.target.className;
+    const target = event.target.className;
 
     switch (target) {
       case "menu__Close":
-        menuAddorRemoveClass("remove");
+        hideMenu();
         break;
       case "overlay":
-        menuAddorRemoveClass("remove");
+        hideMenu();
         break;
       case "menu__link":
-        menuAddorRemoveClass("remove");
+        hideMenu();
         break;
     }
   }
