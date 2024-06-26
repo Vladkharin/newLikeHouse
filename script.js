@@ -515,8 +515,6 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  form.addEventListener("submit", (event) => postData(form, event));
-
   function formValidate() {
     let error = 0;
 
@@ -672,4 +670,6 @@ window.addEventListener("DOMContentLoaded", () => {
   btnCLoseBlackCrestik.addEventListener("click", () => hideThanksModal());
 
   feedBackModal.addEventListener("click", (event) => closeFeedbackModal(event));
+
+  form.addEventListener("submit", (event) => postData(form, event));
 });

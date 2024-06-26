@@ -111,7 +111,7 @@
                     <div class="firstBlock__information-text">Кол-во спален: 2</div>
                     <div class="firstBlock__information-text">Кол-во санузлов: 1</div>
                     <div class="firstBlock__information-text">Кухня - гостиная: 16 м2</div>
-                    <div class="firstBlock__information-text">Сроки строительства: 24 дня</div>
+                    <div class="firstBlock__information-text">Сроки строительства: 60 дней</div>
                     <div class="firstBlock__button">СТОИМОСТЬ: <span></span> руб.</div>
                 </div>
             </div>
@@ -396,26 +396,37 @@
             </button>
         </div>
     </div>
-    <div class="orderModal notVisible">
+    <!-- <div class="orderModal notVisible">
         <div class="orderModal__wrapper">
-            <form action="">
+            <form class="orderModal__form" action="sendorder.php" method="post">
                 <label><div>Получить предложение</div></label>
-                <label><p>Введите имя</p> <input type="text"></label>
-                <label><p>Введите номер WhatsApp</p> <input type="tel"></label>
+                <label><p>Введите имя</p> <input type="text" name="name" class="_req"></label>
+                <label><p>Введите номер WhatsApp</p> <input type="tel" name="tel" class="_req"></label>
 
                 <button type="submit">Потдвердить</button>
-
+                <div class="error tl17585 notVisible">Обязательное поле</div>
+                <div class="error tl24085 notVisible">Обязательное поле</div>
             </form>
             <div class="orders">
                 <p>Вы выбрали:</p>
                 
             </div>
             <button class="orderModal__close"> </button>
+        </div> -->
+<!-- 
+        <div class="feedBackModal none">
+            <div class="feedBackModal__wrapper">
+                <img src="./assets/icons/crestikBlack.svg" alt="" class="crestikBlack">
+                <div class="feedBackModal__complete"></div>
+                <div class="feedBackModal__text">Спасибо! Данные успешно отправлены.</div>
+            </div>
         </div>
     </div>
-    <button class="order"> Получить коммерческое предложение</button>
+    <button class="order"> Получить коммерческое предложение</button> -->
     <div class="cost">СТОИМОСТЬ:<span class="cost__span"></span> руб.</div>
     <div id="id" class="none">000000003</div>
+
+
 
     <script src="https://unpkg.com/imask"></script>
     <script src="./assets/pages/scriptPage.js"></script>

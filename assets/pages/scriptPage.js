@@ -60,17 +60,19 @@ const sliderImgsModal = modal.querySelectorAll(".modalMain__img");
 const btnNext = buttonWrapper.children[buttonWrapper.children.length - 2];
 const btnPrev = buttonWrapper.children[buttonWrapper.children.length - 1];
 
-const orderModal = document.querySelector(".orderModal");
-const orderModalWrapper = document.querySelector(".orderModal__wrapper");
-const formInputMask = orderModalWrapper.querySelector("input[type=tel]");
-const openButtonOrderModal = document.querySelector(".order");
-const closeButtonOrderModal = document.querySelector(".orderModal__close");
-const orders = document.querySelector(".orders");
+// const orderModal = document.querySelector(".orderModal");
+// const orderModalWrapper = document.querySelector(".orderModal__wrapper");
+// const formInputMask = orderModalWrapper.querySelector("input[type=tel]");
+// const openButtonOrderModal = document.querySelector(".order");
+// const closeButtonOrderModal = document.querySelector(".orderModal__close");
+// const orders = document.querySelector(".orders");
 
-const mask = new IMask(formInputMask, {
-  mask: "+0 (000) 000-00-00",
-  lazy: true,
-});
+// const mask = new IMask(formInputMask, {
+//   mask: "+0 (000) 000-00-00",
+//   lazy: true,
+// });
+
+// const form = document.querySelector(".orderModal__form");
 //an object made up of elements of mutual substitution, cant choose without, cant be removed without
 
 const choiceobj = {
@@ -395,20 +397,15 @@ function actionOnNumberInputs(event) {
       priceChangeDueToFirstInput(0, "-", value);
     } else if (+value > firstPositionInput) {
       activateBtn(firstActiveButton);
-      console.log(4);
 
       priceChangeDueToFirstInput(+value * COAST_WELL, "+", value);
 
       listAdditionalServices.push(`Количество метров: ${firstPositionInput}`);
     } else if (+value < firstPositionInput) {
-      console.log(5);
-
       priceChangeDueToFirstInput(+value * COAST_WELL, "+", value);
 
       listAdditionalServices.push(`Количество метров: ${firstPositionInput}`);
     } else if (+value == firstPositionInput) {
-      console.log(6);
-
       priceChangeDueToFirstInput(+value * COAST_WELL, "+", value);
 
       listAdditionalServices.push(`Количество метров: ${firstPositionInput}`);
@@ -477,19 +474,14 @@ function actionOnNumberInputs(event) {
       priceChangeDueToSecondInput(0, "-", value);
     } else if (+value > secondPositionInput) {
       activateBtn(secondActiveButton);
-      console.log(1);
       priceChangeDueToSecondInput(+value * COAST_FOUNTAIN, "+", value);
-      console.log(secondPositionInput);
-      console.log(value);
 
       listAdditionalServices.push(`Количество колец: ${secondPositionInput}`);
     } else if (+value < secondPositionInput) {
-      console.log(2);
       priceChangeDueToSecondInput(+value * COAST_FOUNTAIN, "+", value);
 
       listAdditionalServices.push(`Количество колец: ${secondPositionInput}`);
     } else if (+value == secondPositionInput) {
-      console.log(3);
       priceChangeDueToSecondInput(+value * COAST_FOUNTAIN, "+", value);
 
       listAdditionalServices.push(`Количество колец: ${secondPositionInput}`);
@@ -586,7 +578,6 @@ function actionOnActiveButton(btn, value) {
     listAdditionalServices.splice(indexEl, 1);
   } else if (choiceElsId && choice == "cant choose without") {
     choiceElsId.forEach((elId) => {
-      console.log(choiceElsId);
       const el = document.getElementById(`${elId}`);
 
       let elChildren = "";
@@ -599,8 +590,6 @@ function actionOnActiveButton(btn, value) {
       const indexEl = listAdditionalServices.indexOf(searchForElementText(elId));
 
       if (indexEl !== -1) {
-        console.log(1);
-
         listAdditionalServices.splice(indexEl, 1);
 
         deactivateBtn(elChildren);
@@ -644,8 +633,6 @@ function actionOnActiveButton(btn, value) {
 
   deactivateBtn(btn);
   priceChange -= value;
-
-  console.log(listAdditionalServices);
 }
 
 function actionOnInactiveButton(btn, value) {
@@ -782,8 +769,6 @@ function actionOnInactiveButton(btn, value) {
 
   activateBtn(btn);
   priceChange += value;
-
-  console.log(listAdditionalServices);
 }
 
 function actionOnButtonField(target) {
@@ -979,6 +964,91 @@ function closeOrderModal(conditionSelector, selector) {
   }
 }
 
+async function postData(event) {
+  event.preventDefault();
+
+  let error = formValidate();
+
+  if (error == 0) {
+    const formData = new FormData(form);
+
+    formData.set("choice", listAdditionalServices);
+
+    const response = await fetch("sendorder.php", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (response.status === 200) {
+      showThanksModal();
+      form.reset();
+    } else {
+      alert(FORM_STATUS_MESSAGE.failure);
+    }
+  }
+}
+
+function formValidate() {
+  let error = 0;
+  let formReq = document.querySelectorAll("._req");
+  let errorInfo = document.querySelectorAll(".error");
+
+  for (let index = 0; index < formReq.length; index++) {
+    const input = formReq[index];
+    const errorCar = errorInfo[index];
+    formRemoveError(input, errorCar);
+
+    if (input.name === "name") {
+      if (input.value.length > 25) {
+        formAddError(input, errorCar);
+        error++;
+      }
+
+      if (input.value.trim() === "") {
+        formAddError(input, errorCar);
+        error++;
+      }
+    }
+
+    if (input.name === "tel") {
+      if (input.value === "") {
+        formAddError(input, errorCar);
+        error++;
+      }
+    }
+  }
+
+  return error;
+}
+
+function formAddError(input, error) {
+  input.parentElement.classList.add("_error");
+  input.classList.add("_error");
+  error.classList.add("show");
+  error.classList.remove("notVisible");
+}
+
+function formRemoveError(input, error) {
+  input.parentElement.classList.remove("_error");
+  input.classList.remove("_error");
+  error.classList.remove("show");
+  error.classList.add("notVisible");
+}
+
+function hideThanksModal() {
+  const thanksModal = document.querySelector(".feedBackModal");
+  thanksModal.classList.add("none");
+  thanksModal.classList.remove("block");
+}
+
+function showThanksModal() {
+  const thanksModal = document.querySelector(".feedBackModal");
+  thanksModal.classList.remove("none");
+  thanksModal.classList.add("block");
+
+  setTimeout(hideThanksModal, 4000);
+}
+
 createAdditionalServices(fetchHouses);
 
 prevModal.addEventListener("click", () => switchSlides(-1));
@@ -995,6 +1065,8 @@ btnClose.addEventListener("click", () => closeModal(modal, modal));
 
 buttonWrapper.addEventListener("click", (event) => closeModal(event.target, modal));
 
-openButtonOrderModal.addEventListener("click", () => openOrderModal());
+// openButtonOrderModal.addEventListener("click", () => openOrderModal());
 
-closeButtonOrderModal.addEventListener("click", () => closeOrderModal(orderModal, orderModal));
+// closeButtonOrderModal.addEventListener("click", () => closeOrderModal(orderModal, orderModal));
+
+// form.addEventListener("submit", (event) => postData(event));
