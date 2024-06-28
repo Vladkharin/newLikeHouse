@@ -606,6 +606,10 @@ window.addEventListener("DOMContentLoaded", () => {
       }
 
       let children = codeElement.children[0];
+
+      if (children == undefined) {
+        return;
+      }
       let nextSib = codeElement.nextElementSibling.children[0];
       let cost = 0;
 

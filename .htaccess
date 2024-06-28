@@ -10,16 +10,13 @@
 </ifModule>
 
 <ifModule mod_headers.c>
-    <FilesMatch "\.(html|htm)$">
-        Header set Cache-Control "max-age=43200"
-    </FilesMatch>
-    <FilesMatch "\.(flv|swf|ico|gif|jpg|jpeg|png)$">
+    <FilesMatch "\.(flv|swf|ico|gif|jpeg|png)$">
         Header set Cache-Control "max-age=2592000"
     </FilesMatch>
     <FilesMatch "\.(js|css)$">
         Header set Cache-Control "max-age=1"
     </FilesMatch>
-    <FilesMatch "\.(pl|php|cgi|spl|scgi|fcgi|js|css)$">
+    <FilesMatch "\.(pl|php|cgi|spl|scgi|fcgi|js|css|html|jpg)$">
         Header unset Cache-Control
     </FilesMatch>
 </IfModule>
