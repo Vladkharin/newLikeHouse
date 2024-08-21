@@ -205,13 +205,13 @@ body {
   }
 }
 
-.firstBlock__buttonMediaMin940px p {
+.firstBlock__buttonMap p {
   padding: 0;
   margin: 0;
-  width: 308px;
+  width: 330px;
   height: 70px;
-  border: #fff solid 3px;
-  background: rgba(0, 0, 0, 0);
+  border: rgb(125, 252, 66) solid 3px;
+  background: rgba(125, 252, 66, 0.5);
   font-family: "FuturaPTWebBold";
   font-size: 20px;
   line-height: 3;
