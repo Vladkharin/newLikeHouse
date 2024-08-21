@@ -37,7 +37,7 @@ body {
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.4)),
     url("assets/img/BackGround_FirstBlock_320pxMedia.jpg") center center/cover no-repeat;
   width: 100%;
-  height: 790px;
+  height: 850px;
   z-index: 1;
   padding-top: 115px;
   position: relative;
@@ -208,13 +208,13 @@ body {
 .firstBlock__buttonMap p {
   padding: 0;
   margin: 0;
-  width: 330px;
+  width: 300px;
   height: 70px;
   border: rgb(125, 252, 66) solid 3px;
   background: rgba(125, 252, 66, 0.5);
   font-family: "FuturaPTWebBold";
-  font-size: 20px;
-  line-height: 3;
+  font-size: 19px;
+  line-height: 3.5;
   font-weight: 500;
   font-style: normal;
   color: #ffffff;
@@ -1161,7 +1161,7 @@ body {
 
   .firstBlock {
     padding-top: 80px;
-    height: 610px;
+    height: 670px;
     background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.4)),
       url("assets/img/BackGround_firstBlock.jpg") center center/cover no-repeat;
   }
@@ -1447,7 +1447,7 @@ body {
   }
 
   .firstBlock {
-    height: 660px;
+    height: 710px;
   }
 
   .firstBlock__wrapper {
