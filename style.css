@@ -123,8 +123,9 @@ body {
 }
 
 .firstBlock__buttonMediaMin940px {
+  background-color: orange;
   margin-top: 70px;
-  width: 300px;
+  width: 308px;
   height: 70px;
   display: none;
 }
@@ -1633,6 +1634,7 @@ body {
   .firstBlock__buttons {
     margin-top: 70px;
     flex-direction: row;
+    gap: 300px;
   }
 
   .firstBlock__buttonMediaMin940px {
