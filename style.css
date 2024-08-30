@@ -101,12 +101,12 @@ body {
   font-weight: 400;
   font-style: normal;
   word-spacing: 4.7px;
+  line-height: 1.3;
   text-align: left;
-  line-height: 1.55;
   text-align: center;
 }
 
-.firstBlock__title {
+.firstBlock__texts {
   margin: 0;
   font-size: 20px;
   font-weight: 400;
@@ -1457,10 +1457,11 @@ body {
   }
 
   .firstBlock__header {
-    text-align: start;
+    text-align: end;
     position: relative;
-    width: 330px;
-    font-size: 120px;
+    width: 300px;
+    font-size: 37px;
+    margin-top: 82px;
   }
 
   .firstBlock__header span {
@@ -1471,15 +1472,39 @@ body {
     top: 100px;
   }
 
-  .firstBlock__title {
-    margin-top: 90px;
-    text-align: start;
-    width: 321px;
-    font-size: 22px;
-    font-style: normal;
+  .firstBlock__logo {
+    position: absolute;
+    left: 170px;
+    top: 225px;
+    width: 270px;
+  }
+
+  .firstBlock__texts {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    margin-top: 82px;
     font-weight: 400;
-    line-height: 28px;
     padding-left: 30px;
+    gap: 20px;
+  }
+
+  .firstBlock__text {
+    text-align: start;
+    line-height: 1.3;
+    font-style: normal;
+    margin: 0;
+  }
+
+  .big {
+    width: 559px;
+    font-size: 37px;
+  }
+
+  .small {
+    font-size: 30px;
+    width: 395px;
+    line-height: 1.1;
   }
 
   .secondBlock {
@@ -1597,7 +1622,7 @@ body {
     margin-top: 105px;
     display: block;
     width: 310px;
-    height: 2px;
+    height: 3px;
     opacity: 1;
   }
 
@@ -1976,7 +2001,7 @@ body {
   }
 
   .smallLine {
-    width: 505px;
+    width: 285px;
     position: absolute;
     left: 309px;
   }
