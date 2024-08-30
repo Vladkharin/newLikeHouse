@@ -1459,7 +1459,7 @@ body {
   .firstBlock__header {
     text-align: end;
     position: relative;
-    width: 300px;
+    width: 266px;
     font-size: 37px;
     margin-top: 82px;
   }
@@ -1474,8 +1474,8 @@ body {
 
   .firstBlock__logo {
     position: absolute;
-    left: 170px;
-    top: 225px;
+    left: 150px;
+    top: 205px;
     width: 270px;
   }
 
@@ -2001,9 +2001,9 @@ body {
   }
 
   .smallLine {
-    width: 285px;
+    width: 325px;
     position: absolute;
-    left: 309px;
+    left: 271px;
   }
 
   .secondBlock__secondList {
