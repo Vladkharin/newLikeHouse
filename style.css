@@ -17,6 +17,9 @@ body {
   width: 310px;
 }
 
+.desc {
+  display: none;
+}
 .nav {
   height: 100px;
   width: 100%;
@@ -107,7 +110,7 @@ body {
 }
 
 .firstBlock__texts {
-  margin: 0;
+  margin-top: 100px;
   font-size: 20px;
   font-weight: 400;
   color: #fff;
@@ -115,8 +118,20 @@ body {
   text-align: center;
 }
 
+.firstBlock__texts > img {
+  width: 295px;
+}
+
+.small {
+  font-size: 15px;
+}
+
+.firstBlock__logo {
+  position: absolute;
+}
+
 .firstBlock__buttonMediaMax940px {
-  margin-top: 230px;
+  margin-top: 150px;
   width: 300px;
   height: 70px;
   cursor: pointer;
@@ -1152,6 +1167,19 @@ body {
     line-height: 25px;
   }
 
+  .firstBlock__logo {
+    left: 90px;
+  }
+
+  .small {
+    font-size: 20px;
+  }
+
+  .big {
+    font-size: 29px;
+    font-weight: bold;
+  }
+
   .l320 {
     display: none;
   }
@@ -1162,7 +1190,7 @@ body {
 
   .firstBlock {
     padding-top: 80px;
-    height: 670px;
+    height: 750px;
     background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.4)),
       url("assets/img/BackGround_firstBlock.jpg") center center/cover no-repeat;
   }
@@ -1453,7 +1481,7 @@ body {
 
   .firstBlock__wrapper {
     flex-direction: row;
-    height: 250px;
+    height: 100%;
     justify-content: space-between;
   }
 
@@ -1461,7 +1489,7 @@ body {
     text-align: end;
     position: relative;
     width: 266px;
-    font-size: 37px;
+    font-size: 30px;
     margin-top: 82px;
   }
 
@@ -1473,21 +1501,19 @@ body {
     top: 100px;
   }
 
-  .firstBlock__logo {
-    position: absolute;
-    left: 150px;
-    top: 205px;
-    width: 270px;
-  }
-
   .firstBlock__texts {
+    width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: start;
+    align-items: center;
     margin-top: 82px;
     font-weight: 400;
     padding-left: 30px;
     gap: 20px;
+  }
+
+  .firstBlock__texts > img {
+    width: 390px;
   }
 
   .firstBlock__text {
@@ -1497,15 +1523,30 @@ body {
     margin: 0;
   }
 
+  .firstBlock__logo {
+    position: absolute;
+    left: 195px;
+    width: 230px;
+  }
   .big {
-    width: 559px;
-    font-size: 37px;
+    width: 480px;
+    font-size: 30px;
+    text-align: center;
+  }
+
+  .firstBlock__buttonMediaMax940px {
+    margin: 0;
+  }
+
+  .firstBlock__buttons {
+    margin-top: 30px;
   }
 
   .small {
-    font-size: 30px;
+    font-size: 20px;
     width: 395px;
     line-height: 1.1;
+    text-align: center;
   }
 
   .secondBlock {
@@ -1603,6 +1644,10 @@ body {
     margin-top: 40px;
     height: 500px;
   }
+
+  .desc {
+    display: none;
+  }
 }
 
 @media (min-width: 960px) {
@@ -1620,21 +1665,39 @@ body {
   }
 
   .smallLine {
-    margin-top: 105px;
+    position: absolute;
+    left: 275px;
+    margin-top: 100px;
     display: block;
-    width: 310px;
+    width: 175px;
     height: 3px;
     opacity: 1;
   }
 
+  .firstBlock__texts {
+    align-items: start;
+    width: 510px;
+  }
+
+  .firstBlock__logo {
+    top: 170px;
+  }
+
+  .big {
+    text-align: start;
+  }
+
+  .small {
+    text-align: start;
+  }
   .firstBlock {
     height: 570px;
   }
 
   .firstBlock__buttons {
-    margin-top: 70px;
+    margin-top: 60px;
     flex-direction: row;
-    gap: 300px;
+    gap: 160px;
   }
 
   .firstBlock__buttonMediaMin940px {
@@ -1958,6 +2021,14 @@ body {
     width: 40px;
     height: 40px;
   }
+
+  .desc {
+    display: flex;
+  }
+
+  .mob {
+    display: none;
+  }
 }
 
 @media (min-width: 1200px) {
@@ -1965,8 +2036,41 @@ body {
     width: 1160px;
   }
 
+  .firstBlock__header {
+    text-align: end;
+    position: relative;
+    width: 266px;
+    font-size: 37px;
+    margin-top: 82px;
+  }
+
+  .firstBlock__texts {
+    width: 580px;
+  }
+
+  .firstBlock__logo {
+    position: absolute;
+    left: 150px;
+    top: 205px;
+    width: 270px;
+  }
+  .big {
+    width: 559px;
+    font-size: 37px;
+  }
+
+  .small {
+    font-size: 30px;
+    width: 395px;
+    line-height: 1.1;
+  }
+
+  .firstBlock__texts > img {
+    width: 439px;
+  }
+
   .firstBlock__buttons {
-    margin-top: 210px;
+    gap: 300px;
   }
 
   .firstBlock__buttonMediaMin940px {
@@ -2006,6 +2110,10 @@ body {
     width: 300px;
     position: absolute;
     left: 285px;
+    margin-top: 105px;
+    display: block;
+    height: 3px;
+    opacity: 1;
   }
 
   .secondBlock__secondList {
